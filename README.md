@@ -13,20 +13,21 @@
 
 - 📌 [Description](#-description)
 - ✨ [Features](#-features)
-- ⚙️ [How It Works](#-how-it-works)
+- ⚙️ [How It Works](#how-it-works)
+  - ✅ [Usage Examples](#-usage-examples)
 - 🛠️ [Options Available](#-options-available)
 - 💡 [Recommended Configurations/Use](#-recommended-configurationsuse)
 - 🧱 [Technical Design](#-technical-design)
 - 📦 [Installation](#-installation)
   - 📥 [For Regular Users](#for-regular-users)
   - 💻 [For Advanced Users](#for-advanced-users)
-    - 🐧 [Unix-based Systems (Linux/macOS)](#i-unix-based-systems-linuxmacos)
-    - 🗔 [Windows Systems](#ii-windows-systems)
+    - 🐧 [Unix-based Systems (Linux/macOS)](#unix-based-systems-linuxmacos)
+    - 🗔 [Windows Systems](#windows-systems)
 - 🔒 [Privacy](#-privacy)
 - 📄 [License](#-license)
-- 🧾 [Changelog](#-changelog)
+- 🧾 [Changelog](#changelog)
 - 💡 [Use Cases](#-use-cases)
-- ⚠️ [Edge Cases & Warnings](#-edge-cases--warnings)
+- ⚠️ [Edge Cases & Warnings](#edge-cases--warnings)
 - 🤝 [Contributions](#-contributions)
 
 ---
@@ -149,8 +150,7 @@ The script was designed with modularity, robustness, and automation in mind. Key
 
 ### 📥 For Regular Users
 
-This script currently runs as a command-line interface (CLI) only.
-⚠️ Note: This script is currently CLI-only. No executable (.exe) is available at this time
+⚠️ This script is currently CLI-only. No executable (.exe) is available at this time.
 
 1. Open your terminal or command prompt.
 2. Navigate to the folder where `unicode_to_png.py` is located.
@@ -202,7 +202,7 @@ See [LICENSE](LICENSE) for full terms.
 
 ## 🧾 Changelog
 
-See [CHANGELOG.md](./CHANGELOG.md) for details on recent updates.
+See [CHANGELOG.md](CHANGELOG.md) for details on recent updates.
 
 ---
 

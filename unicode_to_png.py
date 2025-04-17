@@ -1,5 +1,5 @@
 """
-🖼️ Emoji Icon Generator for Browser Extensions
+🖼️ Emoji Icon Generator for Browser Extensions v. 1.11.
 ---------------------------------------------
 
 This script generates PNG icons of various standard sizes required for web browser extensions,

@@ -40,4 +40,3 @@ Once the issue is confirmed and a patch is prepared:
 ## Preferred Contact Method
 
 Please report issues to: **[spalmah@proton.me]** or use GitHub Security Advisories if enabled.  
-(*Replace with your real contact or security process link*)
