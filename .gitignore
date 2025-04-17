@@ -1,0 +1,15 @@
+# Ignore folders generated at runtime
+emojis/
+log/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environments
+env/
+.venv/
+
+# Ignore system files (Windows/macOS)
+.DS_Store
+Thumbs.db
