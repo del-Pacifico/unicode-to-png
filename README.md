@@ -13,21 +13,21 @@
 
 - 📌 [Description](#-description)
 - ✨ [Features](#-features)
-- ⚙️ [How It Works](#how-it-works)
+- ⚙️ [How It Works](#️-how-it-works)
   - ✅ [Usage Examples](#-usage-examples)
-- 🛠️ [Options Available](#-options-available)
+- 🛠️ [Options Available](#️-options-available)
 - 💡 [Recommended Configurations/Use](#-recommended-configurationsuse)
 - 🧱 [Technical Design](#-technical-design)
 - 📦 [Installation](#-installation)
   - 📥 [For Regular Users](#for-regular-users)
-  - 💻 [For Advanced Users](#for-advanced-users)
-    - 🐧 [Unix-based Systems (Linux/macOS)](#unix-based-systems-linuxmacos)
-    - 🗔 [Windows Systems](#windows-systems)
+  - 💻 [For Advanced Users](#i-for-advanced-users)
+    - 🐧 [Unix-based Systems (Linux/macOS)](#i--unix-based-systems-linuxmacos)
+    - 🗔 [Windows Systems](#ii--windows-systems)
 - 🔒 [Privacy](#-privacy)
 - 📄 [License](#-license)
-- 🧾 [Changelog](#changelog)
+- 🧾 [Changelog](#-changelog)
 - 💡 [Use Cases](#-use-cases)
-- ⚠️ [Edge Cases & Warnings](#edge-cases--warnings)
+- ⚠️ [Edge Cases & Warnings](#edge-cases-warnings)
 - 🤝 [Contributions](#-contributions)
 
 ---
@@ -215,7 +215,7 @@ See [CHANGELOG.md](CHANGELOG.md) for details on recent updates.
 
 ---
 
-## ⚠️ Edge Cases & Warnings
+## ⚠️ Edge Cases Warnings
 
 - Emojis not supported by your OS font may render blank.
 - Composite emojis might require ZWJ support (`👨‍👩‍👧‍👦`).

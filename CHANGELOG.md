@@ -7,13 +7,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [1.11] - 2025-04-16
 
-### 🚀 Overview
+### 🚀 Overview of Changes
 
 This update focuses on polish, correctness, and usability across project metadata, documentation, and internal linking. It ensures a fully functional navigation experience in the README and aligns all files for GitHub publishing and open source maintainability.
 
 ---
 
-### ✨ Added
+### ✨ New Features
 
 - **Status Badge:** Introduced `status: beta` badge to clarify project maturity.
 - **Technical Summary & Description:** Added developer-focused metadata for GitHub repo creation.
@@ -48,6 +48,14 @@ This update focuses on polish, correctness, and usability across project metadat
 - Clean Markdown formatting throughout all documentation blocks.
 - Ensured internal anchors are fully GitHub-compatible.
 - Improved structure and consistency for better rendering and accessibility.
+
+---
+
+### 📘 Post-release Updates (2025-04-17)
+
+- Fixed broken Markdown anchors in the README Table of Contents (`How It Works`, `Options Available`, `Changelog`, etc.).
+- Corrected internal headings to match GitHub anchor behavior.
+- Updated `SECURITY.md` to reflect version `1.11` as the currently supported version.
 
 ---
 
