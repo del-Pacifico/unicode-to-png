@@ -1,7 +1,7 @@
 # 🖼️ unicode_to_png
 
 ![Version](https://img.shields.io/badge/version-1.10-blue?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)
+![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows-orange?style=flat-square)
 ![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
 ![Pillow](https://img.shields.io/badge/pillow-9.0%2B-lightgrey?style=flat-square)
@@ -14,20 +14,15 @@
 - 📌 [Description](#-description)
 - ✨ [Features](#-features)
 - ⚙️ [How It Works](#️-how-it-works)
-  - ✅ [Usage Examples](#-usage-examples)
 - 🛠️ [Options Available](#️-options-available)
 - 💡 [Recommended Configurations/Use](#-recommended-configurationsuse)
 - 🧱 [Technical Design](#-technical-design)
 - 📦 [Installation](#-installation)
-  - 📥 [For Regular Users](#for-regular-users)
-  - 💻 [For Advanced Users](#i-for-advanced-users)
-    - 🐧 [Unix-based Systems (Linux/macOS)](#i--unix-based-systems-linuxmacos)
-    - 🗔 [Windows Systems](#ii--windows-systems)
 - 🔒 [Privacy](#-privacy)
 - 📄 [License](#-license)
 - 🧾 [Changelog](#-changelog)
 - 💡 [Use Cases](#-use-cases)
-- ⚠️ [Edge Cases & Warnings](#edge-cases-warnings)
+- ⚠️ [Edge Cases Warnings](#️-edge-cases-warnings)
 - 🤝 [Contributions](#-contributions)
 
 ---
@@ -54,11 +49,33 @@
 ## ⚙️ How It Works
 
 1. The script receives one or more emoji inputs (via `--emoji` or `--batch`).
+ ⚠️ **Important:** This script only supports valid [Unicode emoji characters](https://unicode.org/emoji/charts/full-emoji-list.html).  
+ It does **not** accept regular letters, ASCII symbols, dingbats, or non-emoji Unicode characters.
 2. It renders the emoji using the Segoe UI Emoji font on a high-resolution canvas.
 3. The image is centered, scaled, and downsampled to standard icon sizes.
 4. Each size is saved as a transparent `.png` file.
 5. Output is structured in subfolders named using a base + alias format.
 6. A log file is created **only if** any warning, overwrite, or error occurs.
+
+### 🖼️ Visual Preview
+
+Below are examples of how the script operates and what kind of output it produces:
+
+#### 🧪 CLI Usage Demo
+
+![CLI Demo](assets/cli_demo.png)
+
+#### 📁 Folder Output Overview
+
+This image shows how emoji icon sets are stored after generation.
+
+![Output Preview](assets/output_preview.png)
+
+#### 🔍 All Sizes Generated (Example: 🤝 Handshake Emoji)
+
+A detailed view of the PNG files produced in various sizes from a single emoji.
+
+![Emoji Sizes Detail](assets/emoji_sizes_detail.png)
 
 ### ✅ Usage Examples
 
@@ -195,7 +212,7 @@ This script:
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.  
+This project is licensed under the **Mozilla Public License 2.0 (MPL-2.0)**.  
 See [LICENSE](LICENSE) for full terms.
 
 ---
@@ -231,3 +248,12 @@ Contributions are welcome! To submit a feature, report a bug, or improve documen
 1. Fork the repository
 2. Create a new branch (`feature/my-feature`)
 3. Submit a Pull Request
+
+---
+
+### 🏷️ Project Qualities
+
+![No Tracking](https://img.shields.io/badge/Privacy-No%20tracking-blueviolet?style=flat-square&logo=shield)
+![Lightweight](https://img.shields.io/badge/Built-lightweight-lightgrey?style=flat-square)
+![Modular Design](https://img.shields.io/badge/Architecture-Modular-informational?style=flat-square)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=flat-square&logo=github)
