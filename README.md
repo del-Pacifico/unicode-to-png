@@ -29,7 +29,7 @@
 
 ## 📌 Description
 
-**unicode_to_png v1.10** is a professional-grade Python script that generates browser-compatible PNG icons from emoji characters. It's tailored for developers building browser extensions or tools requiring well-structured icon sets for each emoji. This script is designed for Windows OS. Compatibility on other platforms may require adjustments.
+**unicode_to_png v1.12** is a professional-grade Python script that generates browser-compatible PNG icons from emoji characters. It's tailored for developers building browser extensions or tools requiring well-structured icon sets for each emoji. This script is designed for Windows OS. Compatibility on other platforms may require adjustments.
 
 ---
 

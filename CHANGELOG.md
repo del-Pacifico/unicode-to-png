@@ -9,14 +9,20 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### 🛠️ Fixed
 
-- Corrected GitHub Actions workflow:
-  - Updated to `github/codeql-action@v3` due to official deprecation of `v2` (January 2025).
-  - Added proper `permissions` block to allow CodeQL to report results to GitHub Security tab.
+- Updated GitHub Actions workflow for CodeQL analysis:
+  - Migrated from deprecated `@v2` to `@v3` (`init` and `analyze`).
+  - Added required `permissions` block (`security-events: write`) to allow reporting results to GitHub Security.
 
-### ✨ Planned
+### 📘 Documentation & Metadata
 
-- Support for custom image sizes via `--sizes` flag (TBD).
-- Interactive mode fallback improvements (TBD).
+- Updated version references in:
+  - `README.md` header badge and title (`v1.12`)
+  - `security.md` to reflect current stable version
+  - `unicode_to_png.py` script docstring and metadata block
+
+### ℹ️ Notes
+
+- Although CodeQL analysis runs correctly on push and pull requests, results will not appear in the **Security > Code scanning alerts** tab unless the repository belongs to a GitHub **Organization** account. This is a GitHub Advanced Security limitation.
 
 ---
 
