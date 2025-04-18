@@ -54,6 +54,26 @@ Open a PR to the `main` branch and follow the PR template.
 
 ---
 
+## 🤖 AI-Assisted Contributions
+
+This project partially uses tools based on artificial intelligence (AI) for assistance, such as:
+
+- GitHub Copilot
+- OpenAI (ChatGPT)
+- Google Gemini
+
+AI tools may assist in code generation, documentation, formatting, or security best practices. However, **all contributions are reviewed manually** to ensure clarity, accuracy, performance, and compliance with the project's standards.
+
+If you contribute to this repository:
+
+- Feel free to use AI tools to enhance your productivity.
+- Please **disclose clearly** in your pull request description if the contribution was AI-assisted.
+- Ensure that **no proprietary or sensitive data is shared** with AI tools when generating code or suggestions.
+
+We support responsible and transparent use of AI to accelerate development, without compromising quality or authorship clarity.
+
+---
+
 ## 🧾 Guidelines
 
 - ✅ **Use English** in code, comments, commits, and documentation.
