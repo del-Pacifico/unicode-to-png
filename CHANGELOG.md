@@ -7,17 +7,14 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### ✨ Added
+### 🛠️ Fixed
 
-- _TBD_
+- Corrected GitHub Actions workflow: updated `codeql-action` steps to use the correct `github/codeql-action` namespace. This resolves errors when executing `init@v2` and `analyze@v2`.
 
-### 🐞 Fixed
+### ✨ Planned
 
-- _TBD_
-
-### 📘 Documentation
-
-- _TBD_
+- Support for custom image sizes via `--sizes` flag (TBD).
+- Interactive mode fallback improvements (TBD).
 
 ---
 
