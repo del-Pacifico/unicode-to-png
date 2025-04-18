@@ -1,6 +1,6 @@
 # 🖼️ unicode_to_png
 
-![Version](https://img.shields.io/badge/version-1.10-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.12-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows-orange?style=flat-square)
 ![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
@@ -24,12 +24,13 @@
 - 💡 [Use Cases](#-use-cases)
 - ⚠️ [Edge Cases Warnings](#️-edge-cases-warnings)
 - 🤝 [Contributions](#-contributions)
+- 📚 [Governance & Ethics](#-governance--ethics)
 
 ---
 
 ## 📌 Description
 
-**unicode_to_png v1.10** is a professional-grade Python script that generates browser-compatible PNG icons from emoji characters. It's tailored for developers building browser extensions or tools requiring well-structured icon sets for each emoji. This script is designed for Windows OS. Compatibility on other platforms may require adjustments.
+**unicode_to_png v1.12** is a professional-grade Python script that generates browser-compatible PNG icons from emoji characters. It's tailored for developers building browser extensions or tools requiring well-structured icon sets for each emoji. This script is designed for Windows OS. Compatibility on other platforms may require adjustments.
 
 ---
 
@@ -251,9 +252,28 @@ Contributions are welcome! To submit a feature, report a bug, or improve documen
 
 ---
 
-### 🏷️ Project Qualities
+## 📚 Governance & Ethics
 
+- 🔐 [Security Policy](./SECURITY.md) — How we manage vulnerabilities and review AI-assisted code.
+- 🙌 [Contribution Guidelines](./CONTRIBUTING.md) — How to collaborate, submit PRs, and use AI responsibly.
+
+---
+
+## 🏷️ Project Qualities
+
+<!-- === BADGE GROUP: QUALITY === -->
 ![No Tracking](https://img.shields.io/badge/Privacy-No%20tracking-blueviolet?style=flat-square&logo=shield)
 ![Lightweight](https://img.shields.io/badge/Built-lightweight-lightgrey?style=flat-square)
 ![Modular Design](https://img.shields.io/badge/Architecture-Modular-informational?style=flat-square)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=flat-square&logo=github)
+![Freelancer](https://img.shields.io/badge/Freelancer-29B2FE?style=for-the-badge&logo=Freelancer&logoColor=white)
+
+<!-- === BADGE GROUP: PLATFORMS === -->
+![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![PowerShell](https://img.shields.io/badge/PowerShell-%235391FE.svg?style=for-the-badge&logo=powershell&logoColor=white)
+
+<!-- 👇 AI-related badges group -->
+<!-- === BADGE GROUP: AI TOOLS === -->
+![AI Assisted](https://img.shields.io/badge/AI-Generated_or_Assisted-blueviolet?style=flat-square&logo=openai)
+![GitHub Copilot](https://img.shields.io/badge/github_copilot-8957E5?style=for-the-badge&logo=github-copilot&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/google%20gemini-8E75B2?style=for-the-badge&logo=google%20gemini&logoColor=white)

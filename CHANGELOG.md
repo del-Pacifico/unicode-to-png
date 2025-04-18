@@ -7,17 +7,29 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### ✨ Added
+### 🛠️ Fixed
 
-- _TBD_
-
-### 🐞 Fixed
-
-- _TBD_
+- Updated GitHub Actions workflow for CodeQL analysis:
+  - Migrated from deprecated `@v2` to `@v3` (`init` and `analyze`).
+  - Added required `permissions` block (`security-events: write`) to allow GitHub to process results.
+  - Noted that CodeQL scanning results are only visible in repositories under a GitHub **Organization** account.
 
 ### 📘 Documentation
 
-- _TBD_
+- Updated `README.md` with clarified AI badge groups and improved layout.
+- Added `## 🏷️ Project Qualities` section to highlight privacy, modularity, and AI-assisted development.
+- Linked `SECURITY.md` and `CONTRIBUTING.md` via a new section: `## 📚 Governance & Ethics`.
+- Declared the use of tools like GitHub Copilot, ChatGPT (OpenAI), and Google Gemini in both policies.
+
+### 🔧 Metadata & Style
+
+- Maintained consistent badge styles and groupings.
+- Ensured headers follow TOC-compatibility (e.g. badge sections are `##` level).
+- Added markdown-friendly visual spacing between badge groups using `<br>` and comments.
+
+### ℹ️ Notes
+
+- Although CodeQL analysis runs correctly on push and pull requests, results will not appear in the **Security > Code scanning alerts** tab unless the repository belongs to a GitHub **Organization** account. This is a GitHub Advanced Security limitation.
 
 ---
 

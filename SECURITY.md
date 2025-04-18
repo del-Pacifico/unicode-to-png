@@ -7,7 +7,7 @@ Please update to the most recent release before reporting security issues.
 
 | Version | Supported |
 |---------|-----------|
-| 1.11    | ✅         |
+| 1.12    | ✅         |
 
 ---
 
@@ -24,6 +24,20 @@ If you discover a security vulnerability in **Unicode to png**, please follow th
    - A proposed patch (if applicable)
 
 3. We will acknowledge receipt and investigate as quickly as possible.
+
+---
+
+## 🛡️ AI-Assisted Code Policy
+
+Some components of this project may have been generated or improved using AI tools, including static analysis suggestions and code formatting.
+
+To maintain security and transparency:
+
+- All AI-assisted content is reviewed manually by the maintainer.
+- No authentication credentials, API keys, or sensitive data are used or exposed in AI prompts.
+- The project **does not rely on AI-based decision-making** for runtime logic or authentication.
+
+If you identify any vulnerabilities potentially introduced through AI-generated code, please report them via the [Disclosure Policy](#disclosure-policy) section above.
 
 ---
 
