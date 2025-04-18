@@ -9,7 +9,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ### 🛠️ Fixed
 
-- Corrected GitHub Actions workflow: updated `codeql-action` steps to use the correct `github/codeql-action` namespace. This resolves errors when executing `init@v2` and `analyze@v2`.
+- Corrected GitHub Actions workflow:
+  - Updated to `github/codeql-action@v3` due to official deprecation of `v2` (January 2025).
+  - Added proper `permissions` block to allow CodeQL to report results to GitHub Security tab.
 
 ### ✨ Planned
 
