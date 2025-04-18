@@ -1,5 +1,14 @@
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+#
+# Original Author: Sergio Palma Hidalgo
+# Project URL: https://github.com/sergiopalmah/unicode_to_png
+# Copyright (c) 2025 Sergio Palma Hidalgo
+# All rights reserved.
+#
 """
-🖼️ Emoji Icon Generator for Browser Extensions v. 1.11.
+🖼️ Emoji Icon Generator for Browser Extensions v.1.12
 ---------------------------------------------
 
 This script generates PNG icons of various standard sizes required for web browser extensions,
@@ -65,6 +74,22 @@ if pillow_version < (9, 0):
 # Removes any characters from the folder name that are not alphanumeric or underscores
 def sanitize_folder_name(name):
     return re.sub(r'[^a-zA-Z0-9_]', '_', name).strip('_')
+    
+# ✅ Validates whether a character is an emoji using common Unicode ranges
+def is_emoji(character):
+    return any([
+        '\U0001F300' <= character <= '\U0001F5FF',  # Misc Symbols and Pictographs
+        '\U0001F600' <= character <= '\U0001F64F',  # Emoticons
+        '\U0001F680' <= character <= '\U0001F6FF',  # Transport and Map Symbols
+        '\U0001F700' <= character <= '\U0001F77F',  # Alchemical Symbols
+        '\U0001F780' <= character <= '\U0001F7FF',  # Geometric Shapes Extended
+        '\U0001F800' <= character <= '\U0001F8FF',  # Supplemental Arrows-C
+        '\U0001F900' <= character <= '\U0001F9FF',  # Supplemental Symbols and Pictographs
+        '\U0001FA00' <= character <= '\U0001FA6F',  # Extended-A
+        '\U0001FA70' <= character <= '\U0001FAFF',  # Extended-B
+        '\u2600'     <= character <= '\u26FF',      # Misc symbols
+        '\u2700'     <= character <= '\u27BF',      # Dingbats
+    ])
 
 # 🔍 Parse the --batch argument into (emoji, alias) pairs
 def parse_batch(batch_string):
@@ -141,11 +166,13 @@ Requirements:
         emoji_pairs = parse_batch(args.batch)
     else:
         emoji_input = args.emoji.strip() if args.emoji else input("🔤 Enter the emoji symbol: ").strip()
-        if not emoji_input or not emoji_input.isprintable():
-            print(f"[✗] Invalid or non-printable emoji: '{emoji_input}'. Exiting.")
+
+        # ✅ Validate that the input is a printable emoji character
+        if not emoji_input or not emoji_input.isprintable() or not is_emoji(emoji_input):
+            print(f"[✗] Invalid input: '{emoji_input}' is not a recognized emoji. Exiting.")
             sys.exit(1)
-        alias = sanitize_folder_name(args.folder.strip() if args.folder else "emoji")
-        emoji_pairs = [(emoji_input, alias)]
+
+        emoji_pairs = [(emoji_input, "single")]  # ➕ avoid alias duplication in --folder mode
 
     # Get folder name from CLI or prompt
     if args.folder:
@@ -167,9 +194,11 @@ Requirements:
 
     # Loop through each emoji + alias pair
     for index, (emoji, alias) in enumerate(emoji_pairs, start=1):
-        subfolder_name = f"{folder_base}_{alias}"
+        # ➕ Generate folder name based on CLI --folder when not in batch mode
+        subfolder_name = f"{folder_base}" if alias == "single" else f"{folder_base}_{alias}"
         output_path = os.path.join(emojis_root, subfolder_name)
         os.makedirs(output_path, exist_ok=True)
+
 
         if not os.access(output_path, os.W_OK):
             print(f"[✗] Cannot write to the output folder: {output_path}")
@@ -225,8 +254,24 @@ Requirements:
         log("🚀 Folder ready for browser extension use.", log_entries, quiet=quiet_mode)
         write_log_if_needed(log_entries, log_file)
 
+# ▶️ Entry point of the script when executed directly (not imported as a module)
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        print(f"[✗] Unexpected error occurred: {e}")
+        # ❗ Catch any unhandled exception and log it to a fallback file
+        error_msg = f"[✗] Unexpected error occurred: {e}"
+        print(error_msg)
+
+        try:
+            base_path = os.path.dirname(os.path.abspath(__file__))
+            log_dir = os.path.join(base_path, "log")
+            os.makedirs(log_dir, exist_ok=True)
+            log_file = os.path.join(log_dir, datetime.now().strftime("%Y%m%d") + "_error.log")
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {error_msg}\n")
+        except Exception as log_error:
+            print(f"[!] Failed to write to fallback log file: {log_error}")
+
+        sys.exit(1)  # 🔚 Ensure the process exits with error status
+

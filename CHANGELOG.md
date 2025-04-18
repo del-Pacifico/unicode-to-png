@@ -5,6 +5,58 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### ✨ Added
+
+- _TBD_
+
+### 🐞 Fixed
+
+- _TBD_
+
+### 📘 Documentation
+
+- _TBD_
+
+---
+
+## [1.12] - 2025-04-17
+
+### 🐞 Bug Fixes
+
+- Fixed a folder duplication bug where using `--folder fire` incorrectly created `fire_fire`. Now the folder is named exactly as provided by the user.
+- Fixed missing emoji validation: the script now only accepts valid Unicode emoji symbols and rejects non-emoji characters (e.g., regular letters or punctuation).
+
+### ✨ Features & Improvements
+
+- Added full Unicode emoji validation using defined emoji Unicode blocks.
+- Improved the `if __name__ == "__main__"` block:
+  - Uncaught exceptions are now logged in a fallback file located at `log/YYYYMMDD_error.log`.
+  - The script now exits with `sys.exit(1)` on failure, signaling errors properly to external scripts or CI pipelines.
+
+### 📘 Documentation & Presentation
+
+- Added a `Visual Preview` section to the `README.md` that includes:
+  - `cli_demo.png`: Example of CLI usage
+  - `output_preview.png`: Folder overview with generated emoji image set
+  - `emoji_sizes_detail.png`: All PNG sizes produced from a sample emoji
+- Clarified that only valid Unicode emoji are accepted as input (`README.md`, under How It Works).
+- Added a footer badge block to visually highlight key project qualities: No tracking, Modular, Lightweight, Open Source.
+
+### 🛡️ Security & Licensing
+
+- License updated from **MIT** to **Mozilla Public License 2.0 (MPL-2.0)** to ensure proper attribution and openness while protecting original work.
+- Updated project header badge to reflect MPL-2.0.
+- Added recommended MPL license header block to the main script file (`unicode_to_png.py`), including author and GitHub project URL.
+
+### 📁 Project Infrastructure
+
+- Added `.github/FUNDING.yml` to support GitHub Sponsors.
+- Added `.github/workflows/codeql.yml` to enable automatic CodeQL-based static security scanning for Python.
+
+---
+
 ## [1.11] - 2025-04-16
 
 ### 🚀 Overview of Changes
