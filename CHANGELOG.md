@@ -5,6 +5,42 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.19.1] - 2025-05-21
+
+### 🔍 Review Summary
+
+Patch release focused exclusively on documentation and metadata consistency.  
+No source code logic has been changed.
+
+---
+
+### 📝 Changed
+
+- **README.md**
+  - ✅ Fixed anchor links in the Table of Contents to comply with GitHub slug rules.
+  - ✏️ Adjusted Markdown anchors (removed emojis from slugs) for navigation consistency.
+
+- **LICENSE**
+  - 🔄 Updated repository reference to the correct GitHub organization:
+    - From: `github.com/sergiopalmah/unicode_to_png`
+    - To: `github.com/del-Pacifico/unicode_to_png`
+
+- **SECURITY.md**
+  - 🔄 Bumped `Supported Version` table from `1.12` to `1.19` to match latest release.
+
+- **.gitignore**
+  - ✏️ Added rules to exclude editor/IDE metadata: `.vs/`, `*.suo`, `*.db`, `*.vsidx`, etc.
+
+---
+
+### 🧾 Notes
+
+This release ensures all documentation and security references are aligned with the organizational hosting and current project state.
+
+No changes in emoji rendering logic, CLI behavior, or output files were introduced.
+
+---
+
 ## 🧾 Changelog
 
 ### v1.19 — 2025-05-21
