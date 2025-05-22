@@ -11,21 +11,21 @@
 
 ## 📖 Table of Contents
 
-- [📌 Description](#📌-description)
-- [✨ Features](#✨-features)
-- [⚙️ How It Works](#⚙️-how-it-works)
-- [🛠️ Options Available](#🛠️-options-available)
-- [💡 Recommended Configurations/Use](#💡-recommended-configurationsuse)
-- [🧱 Technical Design](#🧱-technical-design)
-- [📦 Installation](#📦-installation)
-- [🔒 Privacy](#🔒-privacy)
-- [📄 License](#📄-license)
-- [🧾 Changelog](#🧾-changelog)
-- [💡 Use Cases](#💡-use-cases)
-- [⚠️ Edge Cases & Warnings](#⚠️-edge-cases--warnings)
-- [💖 Support the Project](#💖-support-the-project)
-- [🤝 Contributions](#🤝-contributions)
-- [📚 Governance & Ethics](#📚-governance--ethics)
+- [Description](#description)
+- [Features](#features)
+- [How It Works](#how-it-works)
+- [Options Available](#options-available)
+- [Recommended Configurations/Use](#recommended-configurationsuse)
+- [Technical Design](#technical-design)
+- [Installation](#installation)
+- [Privacy](#privacy)
+- [License](#license)
+- [Changelog](#changelog)
+- [Use Cases](#use-cases)
+- [Edge Cases & Warnings](#edge-cases--warnings)
+- [Support the Project](#support-the-project)
+- [Contributions](#contributions)
+- [Governance & Ethics](#governance--ethics)
 
 ---
 

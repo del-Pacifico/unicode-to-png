@@ -13,3 +13,17 @@ env/
 # Ignore system files (Windows/macOS)
 .DS_Store
 Thumbs.db
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+.vs/unicode to png/CopilotIndices/17.12.38.29086/CodeChunks.db
+.vs/unicode to png/CopilotIndices/17.12.38.29086/CodeChunks.db-shm
+.vs/unicode to png/CopilotIndices/17.12.38.29086/CodeChunks.db-wal
+.vs/unicode to png/CopilotIndices/17.12.38.29086/SemanticSymbols.db
+.vs/unicode to png/CopilotIndices/17.12.38.29086/SemanticSymbols.db-shm
+.vs/unicode to png/CopilotIndices/17.12.38.29086/SemanticSymbols.db-wal
+.vs/unicode to png/FileContentIndex/35713ed7-c97e-49b9-9dfb-7c4260a798c7.vsidx
+.vs/unicode to png/v17/.wsuo
+.vs/slnx.sqlite-journal
+.vs/unicode to png/FileContentIndex/34d8899a-a8ab-4c9b-80db-cab56388be4d.vsidx
+/.vs/unicode to png/FileContentIndex
+/.vs
