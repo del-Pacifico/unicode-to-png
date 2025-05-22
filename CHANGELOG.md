@@ -5,6 +5,78 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## 🧾 Changelog
+
+### v1.19 — 2025-05-21
+
+#### 🔍 Technical Review Summary (v1.19)
+
+Unicode to PNG v1.19 introduces a robust and production-ready emoji rendering pipeline focused on stability, performance, and developer automation. The inclusion of smart margin correction, logging, and Unicode compliance transforms it into a professional tool for browser extension developers and designers alike.
+
+Key architectural improvements include modularization of logic blocks, isolated error handling, and memory-safe canvas workflows. CI/CD readiness is achieved through silent mode, batch operations, and consistent output structure.
+
+All code is now guided by strong engineering principles:
+- Resilience to edge cases
+- Predictable resource cleanup
+- Defense against invalid input
+- Log-auditable execution flows
+
+---
+
+#### ✨ Added
+
+- `--autofixmargin` flag: auto-detects edge clipping and re-renders with padding.
+- `--margin <float>`: allows manual margin setting (e.g., `--margin 0.25`).
+- Unicode-aware rendering engine that supports:
+  - Skin tone modifiers (`👍🏿`)
+  - ZWJ sequences (`👩‍🚒`, `👨‍👩‍👧‍👦`)
+  - Presentation selectors and flag tags
+- Logging system that:
+  - Records overwrites, warnings, and render issues.
+  - Outputs log files to `log/YYYYMMDD_<folder>.log`
+- CLI `--batch` support for emoji:alias pairs (e.g., `🔥:fire,🎨:palette`)
+- Silent execution mode via `--quiet` (no console output, logs still saved).
+- Folder/alias sanitization for filesystem-safe names.
+- Modular structure with fully isolated functions:
+  - `parse_args()`, `parse_batch()`, `load_font()`, `log()`, `prepare_log_path()`
+- New section in README:
+  - `💖 Support the Project` with donation badges and links.
+- Added project-wide quality badges (privacy, modular design, AI-assisted).
+- Section `🛡️ Engineering Principles` explaining performance and stability principles.
+
+#### 🔄 Changed
+
+- Emoji rendering now uses 4× resolution canvas and high-quality `Image.LANCZOS` downsampling.
+- Bounding box calculation improved using `draw.textbbox()` for precision centering.
+- Logging timestamps now follow format `[YYYY-MM-DD HH:MM:SS]`.
+- Minimum Python version raised to `3.6+` (recommended `3.11+`).
+- Font loading made fault-tolerant with fallback handling.
+- Technical Design section expanded to include modular architecture, validations, and CLI design.
+- README completely overhauled:
+  - Sections rewritten: Description, Features, How It Works, Options, Use Cases
+  - Added command-line usage examples for all flag combinations
+  - Enhanced Table of Contents for accuracy and anchor sync
+
+#### 🛠️ Fixed
+
+- Bug where emojis were clipped at the top/right edges due to tight bounding box.
+- Issue where ZWJ sequences produced misaligned output.
+- Rendering errors that occurred silently without feedback are now logged properly.
+
+### 🧹 Removed
+
+- Implicit emoji rendering without input validation.
+- Redundant or inconsistent print messages.
+- Unclear margin handling logic replaced with formal CLI options.
+
+#### 🔐 Security
+
+- Emoji and folder inputs are fully sanitized (`[a-zA-Z0-9_]` only).
+- No filesystem overwrite without clear log trace.
+- All external input errors are isolated and reported gracefully.
+
+---
+
 ## [Unreleased]
 
 ### 🛠️ Fixed
