@@ -8,32 +8,18 @@
 # All rights reserved.
 #
 """
-🖼️ Emoji Icon Generator for Browser Extensions v.1.12
----------------------------------------------
+📌 Summary:
+Unicode to PNG Generator v1.19 is a cross-compatible Python tool for generating
+browser extension icon sets (16px–128px) from emoji symbols. It supports complex
+emoji structures (e.g. skin modifiers, ZWJ sequences, flags), with smart centering,
+adaptive font fitting, and optional edge-aware margin correction.
 
-This script generates PNG icons of various standard sizes required for web browser extensions,
-based on a user-provided Unicode emoji character.
+Icons are saved in organized subfolders under /emojis, and logs are created only if
+warnings or errors occur. Built-in options include memory limits, visual edge checks,
+and automated retry with increased margins.
 
-✔ Input: Any emoji symbol (e.g. 🖼️, 🐱, 🔥, 🎮, 👨‍💻, 🧑‍🚒)
-✔ Output: PNG icon files in the following sizes:
-   - 16x16 (favicon or action icon)
-   - 19x19 (toolbar icon in Chromium)
-   - 32x32 (context menu support)
-   - 38x38 (high DPI support)
-   - 48x48 (extension page icon)
-   - 128x128 (web store/public listing icon)
-
-✔ Icons are saved in a user-defined subfolder inside the 'emojis' directory.
-✔ If any error occurs, a log file is generated inside 'log/' folder with format YYYYMMDD_<emoji_name>.log
-
-Requirements:
-- Python 3.6+
-- Pillow (PIL) library ≥ 9.0
-- Windows OS with Segoe UI Emoji font installed (default in Windows 10+)
-
-Supports:
-- Composite emojis using ZWJ (Zero Width Joiner), such as 👨‍👩‍👧‍👦 or 🧑‍🚀
-- Embedded color rendering with supported fonts
+Perfect for developers needing quick, precise, and visually safe emoji-based icons
+for web and extension projects.
 """
 
 import sys
@@ -54,6 +40,13 @@ import re
 from datetime import datetime
 import argparse
 
+# ✅ Optional: Import psutil if available for memory monitoring
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    HAS_PSUTIL = False
+
 # 🧩 Setup CLI argument parsing
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -63,8 +56,11 @@ def parse_args():
     parser.add_argument("--folder", type=str, help="Folder name to save icons", required=False)
     parser.add_argument("--batch", type=str, help="Comma-separated list of emojis to process", required=False)
     parser.add_argument("--quiet", action="store_true", help="Suppress console output")
+    parser.add_argument("--memlimit", type=int, help="Maximum memory usage (in MB) before aborting", required=False)
+    parser.add_argument("--margin", type=float, help="Extra margin ratio (0.0 - 1.0) to prevent emoji clipping (default: 0.25)", required=False)
+    parser.add_argument("--edgecheck", action="store_true", help="Enable visual edge test to detect emoji touching final image borders.")
+    parser.add_argument("--autofixmargin", action="store_true", help="If edge is touched, re-render with increased margin (only applies if --edgecheck is active).")
     return parser.parse_args()
-
 
 # ✅ Ensure minimum Pillow version is 9.0
 pillow_version = tuple(map(int, PIL.__version__.split('.')[:2]))
@@ -90,6 +86,112 @@ def is_emoji(character):
         '\u2600'     <= character <= '\u26FF',      # Misc symbols
         '\u2700'     <= character <= '\u27BF',      # Dingbats
     ])
+    
+# 🧠 Classifies the emoji based on its Unicode structure
+def classify_unicode_structure(emoji: str) -> str:
+    """
+    Classifies the emoji into structural categories:
+    SIMPLE, SKIN_MODIFIER, PRESENTATION_SELECTOR, ZWJ_SEQUENCE, REGIONAL_FLAG, COMPLEX.
+
+    Args:
+        emoji (str): The emoji character string.
+
+    Returns:
+        str: Classification category.
+    """
+    try:
+        codepoints = [ord(c) for c in emoji]
+
+        # 👨‍👩‍👧‍👦 → ZWJ-based sequence
+        if 0x200D in codepoints:
+            return "ZWJ_SEQUENCE"
+
+        # ✍🏻 → base + tone modifier (U+1F3FB - U+1F3FF)
+        if any(0x1F3FB <= cp <= 0x1F3FF for cp in codepoints):
+            return "SKIN_MODIFIER"
+
+        # ✏️ → emoji + U+FE0F presentation selector
+        if 0xFE0F in codepoints:
+            return "PRESENTATION_SELECTOR"
+
+        # 🇨🇱 → regional indicators (flags)
+        if all(0x1F1E6 <= cp <= 0x1F1FF for cp in codepoints):
+            return "REGIONAL_FLAG"
+
+        # 🧱 → monolithic
+        if len(codepoints) == 1:
+            return "SIMPLE"
+
+        # Any unrecognized structure
+        return "COMPLEX"
+
+    except Exception as err:
+        return "COMPLEX"
+        
+# 📏 Computes final margin based on structure type
+def get_adjusted_margin(structure_type, base_ratio, size_px):
+    """
+    Calculates a structure-aware margin in pixels.
+
+    Args:
+        structure_type (str): Classification from classify_unicode_structure(...)
+        base_ratio (float): User-defined or default margin ratio
+        size_px (int): Canvas size in pixels
+
+    Returns:
+        int: Total margin in pixels
+    """
+    boost = {
+        "SKIN_MODIFIER": 0.10,
+        "PRESENTATION_SELECTOR": 0.08,
+        "ZWJ_SEQUENCE": 0.12,
+        "REGIONAL_FLAG": 0.06,
+        "COMPLEX": 0.15
+    }.get(structure_type, 0.0)
+
+    total_ratio = base_ratio + boost
+    return int(size_px * total_ratio)
+
+# 🎯 Computes final (x, y) render position with vertical compensation
+def get_adjusted_position(structure_type, temp_size, bbox, log_entries, quiet):
+    """
+    Returns corrected (x, y) coordinates for drawing emoji, compensating for Unicode type.
+
+    Args:
+        structure_type (str): Classification from classify_unicode_structure(...)
+        temp_size (int): Base canvas size
+        bbox (tuple): Bounding box from draw.textbbox()
+        log_entries (list): Log collection
+        quiet (bool): Suppress console output
+
+    Returns:
+        tuple: (x, y) coordinates
+    """
+    try:
+        width = bbox[2] - bbox[0]
+        height = bbox[3] - bbox[1]
+        x = (temp_size - width) // 2 - bbox[0]
+        y = (temp_size - height) // 2 - bbox[1]
+
+        # Adjustment map
+        y_lift = {
+            "SKIN_MODIFIER": 0.03,
+            "PRESENTATION_SELECTOR": 0.02,
+            "ZWJ_SEQUENCE": 0.05,
+            "REGIONAL_FLAG": 0.01,
+            "COMPLEX": 0.04
+        }.get(structure_type, 0.0)
+
+        y -= int(temp_size * y_lift)
+        x = max(x, 0)
+        y = max(y, 0)
+
+        log(f"📐 Center position: x={x}px, y={y}px for type '{structure_type}'", log_entries, quiet=quiet)
+        return (x, y)
+
+    except Exception as err:
+        log(f"[!] Fallback position due to error: {err}", log_entries, quiet=quiet)
+        return (temp_size // 4, temp_size // 4)
 
 # 🔍 Parse the --batch argument into (emoji, alias) pairs
 def parse_batch(batch_string):
@@ -132,6 +234,16 @@ def write_log_if_needed(log_entries, log_file):
     if log_entries:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write('\n'.join(log_entries) + "\n")
+            
+# 🔎 Returns memory usage in MB of the current process if psutil is available
+def get_memory_usage_mb():
+    if not HAS_PSUTIL:
+        return None
+    try:
+        process = psutil.Process(os.getpid())
+        return process.memory_info().rss / (1024 * 1024)  # Convert bytes to MB
+    except Exception:
+        return None
 
 # Loads the Segoe UI Emoji font or falls back to the default if not found
 def load_font(size):
@@ -145,21 +257,113 @@ def load_font(size):
             print(f"[✗] Unrecognized font format: {e}")
     print("[!] Emoji font not found or could not be loaded. Using default font.")
     return ImageFont.load_default()
+    
+# 🧪 Optional test: Detect if emoji rendering touches right or bottom edge of final PNG
+def check_visual_edges(image, size_label, log_entries, quiet):
+    """
+    Checks if any opaque pixel touches the right or bottom edge of the image.
+    Logs a warning if detected.
+
+    Args:
+        image (PIL.Image): Final resized emoji image
+        size_label (int): Output size label (e.g. 128)
+        log_entries (list): Log collector
+        quiet (bool): Suppress console output
+    """
+    try:
+        pixels = image.load()
+        width, height = image.size
+
+        touches_right = any(pixels[width - 1, y][3] != 0 for y in range(height))
+        touches_bottom = any(pixels[x, height - 1][3] != 0 for x in range(width))
+
+        if touches_right or touches_bottom:
+            edge_info = []
+            if touches_right:
+                edge_info.append("right")
+            if touches_bottom:
+                edge_info.append("bottom")
+            log(f"[!] Visual edge warning: emoji touches {', '.join(edge_info)} edge(s) at {size_label}x{size_label}", log_entries, quiet=quiet)
+            log(f" ", log_entries, quiet=quiet)
+    except Exception as edge_check_error:
+        log(f"[!] Visual edge test failed: {edge_check_error}", log_entries, quiet=quiet)
 
 def main():
     print("""
-🖼️ Emoji Icon Generator for Browser Extensions
+🖼️ Unicode to PNG Generator v1.19
 ---------------------------------------------
-Generate a full set of browser extension icons (16px to 128px) from a single emoji.
-Developed for developers who need to create quick and consistent extension icons from emojis.
+Generate a complete set of browser extension icons (16px to 128px) from any emoji,
+now with structure-aware centering, adaptive font fitting, and edge-aware margin control.
 
-Requirements:
+✅ Supports:
+- Single emojis (monolithic)
+- Emojis with skin tone modifiers (e.g. ✍🏻)
+- Emojis using presentation selectors (e.g. ✏️)
+- Composite ZWJ sequences (e.g. 👨‍💻, 🧑‍🚒)
+- Regional flags and fallback complex cases
+
+📦 Requirements:
 - Python 3.6+
-- Pillow installed (pip install pillow)
-- Windows OS with Segoe UI Emoji font
+- Pillow ≥ 9.0 (install via: pip install pillow)
+- Windows OS with Segoe UI Emoji font installed
+
+🧠 Optional Enhancements:
+- Memory monitoring with psutil (for --memlimit support)
+  → pip install psutil
+
+📌 Usage Examples:
+
+# 🔹 Simple emoji (monolithic)
+python unicode_to_png.py --emoji "🧱" --folder bricks
+python unicode_to_png.py --emoji "🧼" --folder hygiene --margin 0.2
+
+# 🔸 Emoji with skin tone or modifiers
+python unicode_to_png.py --emoji "✍🏻" --folder handwriting
+python unicode_to_png.py --emoji "👍🏽" --folder thumbs --margin 0.3
+
+# 🔻 Composite or ZWJ emojis
+python unicode_to_png.py --emoji "👨‍💻" --folder coder
+python unicode_to_png.py --emoji "🧑‍🚒" --folder firefighter --margin 0.35
+
+# 🔀 Batch mode with aliases
+python unicode_to_png.py --batch "📦:box,🎮:game" --folder myicons
+python unicode_to_png.py --batch "💡:idea,👨‍🚀:astro" --folder assets --margin 0.25 --edgecheck --autofixmargin
+
+⚙️ Optional Parameters:
+--memlimit       : Abort if memory usage exceeds this value (in MB).
+--margin         : Extra margin ratio (default: 0.25). Applies adaptive boost based on emoji structure.
+--edgecheck      : Run visual test to detect if emoji touches final image borders (right or bottom).
+--autofixmargin  : If edge is touched, re-render image with increased margin (requires --edgecheck).
+--quiet          : Suppress console output (logs are still generated if needed).
+
+📁 Output:
+- PNG icons saved under 'emojis/<folder>/' directory
+- Log file written to 'log/YYYYMMDD_<folder>.log' if any warning or error occurs
 """)
 
+
     args = parse_args()
+    
+    # ✏️ Default margin ratio to prevent cropping
+    DEFAULT_MARGIN_RATIO = 0.25
+    margin_ratio = args.margin if args.margin and args.margin > 0 else DEFAULT_MARGIN_RATIO
+
+    # 🔔 Inform user if margin was customized
+    if args.margin:
+        print(f"[i] Using custom margin ratio: {margin_ratio}")
+    
+    
+    # 🧠 Set dynamic memory limit for abortion
+    DEFAULT_MEMORY_LIMIT_MB = 500
+    memory_limit_mb = args.memlimit if args.memlimit and args.memlimit > 0 else DEFAULT_MEMORY_LIMIT_MB
+
+    # 🧠 Inform user only if memory monitoring is active and the limit will actually be used
+    if HAS_PSUTIL:
+        if args.memlimit:
+            print(f"[i] Memory limit set to {memory_limit_mb} MB")
+    else:
+        print("[i] psutil module not found. Memory monitoring and --memlimit are disabled.")
+        print("[i] To enable memory monitoring, run: pip install psutil")
 
     # Determine emoji + alias pairs from --batch, --emoji, or interactive
     if args.batch:
@@ -185,6 +389,9 @@ Requirements:
         sys.exit(1)
 
     quiet_mode = args.quiet
+    
+    enable_edge_check = args.edgecheck
+    enable_autofix_margin = args.autofixmargin
 
     # Clean the base folder name
     folder_base = sanitize_folder_name(folder_raw)
@@ -208,6 +415,7 @@ Requirements:
         log_entries = []
 
         log(f"🧩 Generating icon for emoji {index}: '{emoji}' → folder '{output_path}'", log_entries, quiet=quiet_mode)
+        log(f"🧮 Margin ratio applied: {margin_ratio}", log_entries, quiet=quiet_mode)
 
         ICON_SIZES = [16, 19, 32, 38, 48, 128]
         SCALE_FACTOR = 4
@@ -216,18 +424,47 @@ Requirements:
             temp_size = size * SCALE_FACTOR
             img = Image.new("RGBA", (temp_size, temp_size), (0, 0, 0, 0))
             draw = ImageDraw.Draw(img)
-            font = load_font(temp_size - 20)
-
+            
+            # 🔍 Step 0: Classify emoji before rendering
             try:
-                bbox = draw.textbbox((0, 0), emoji, font=font, embedded_color=True)
-            except TypeError:
-                bbox = draw.textbbox((0, 0), emoji, font=font)
+                structure_type = classify_unicode_structure(emoji)
+                log(f"🔍 Unicode structure detected: {structure_type}", log_entries, quiet=quiet_mode)
+            except Exception as classify_error:
+                structure_type = "COMPLEX"
+                log(f"[!] Failed to classify emoji structure: {classify_error}", log_entries, quiet=quiet_mode)
 
-            text_width = bbox[2] - bbox[0]
-            text_height = bbox[3] - bbox[1]
-            x = (temp_size - text_width) // 2 - bbox[0]
-            y = (temp_size - text_height) // 2 - bbox[1]
+            # 🔁 Step 1: Load font and compute bounding box with fit check
+            font_size = int(temp_size * 0.85)  # Start more conservatively (e.g. 85% of canvas)
+            max_attempts = 10
 
+            for attempt in range(max_attempts):
+                font = load_font(font_size)
+                try:
+                    bbox = draw.textbbox((0, 0), emoji, font=font, embedded_color=True)
+                except TypeError:
+                    bbox = draw.textbbox((0, 0), emoji, font=font)
+
+                width = bbox[2] - bbox[0]
+                height = bbox[3] - bbox[1]
+
+                if width <= int(temp_size * 0.97) and height <= int(temp_size * 0.97):
+                    break  # ✅ Emoji fits, safe to proceed
+
+                font_size -= 2  # 🔁 Reduce font size to try again
+
+            else:
+                log(f"[!] Emoji could not fit within {temp_size}px after {max_attempts} attempts. Rendering may be clipped.", log_entries, quiet=quiet_mode)
+
+            # Final validation of bbox
+            if not bbox or len(bbox) != 4:
+                log(f"[✗] Invalid bounding box detected after fit attempts. Skipping size {size}px.", log_entries, quiet=quiet_mode)
+                continue
+
+
+            # 🎯 Step 2: Compute structure-aware position via utility
+            x, y = get_adjusted_position(structure_type, temp_size, bbox, log_entries, quiet_mode)
+
+            # ✍️ Step 3: Render emoji
             try:
                 draw.text((x, y), emoji, font=font, embedded_color=True)
             except TypeError:
@@ -236,9 +473,75 @@ Requirements:
             if all(pixel[3] == 0 for pixel in img.getdata()):
                 log(f"[!] Warning: Emoji may not have rendered at {size}x{size}", log_entries, quiet=quiet_mode)
 
-            resized_img = img.resize((size, size), Image.LANCZOS)
+            # 📏 Step 4: Compute structure-aware margin via utility
+            try:
+                margin_pixels = get_adjusted_margin(structure_type, margin_ratio, temp_size)
+                log(f"🎯 Adjusted margin: {margin_pixels}px for type '{structure_type}'", log_entries, quiet=quiet_mode)
+            except Exception as margin_error:
+                margin_pixels = int(temp_size * margin_ratio)
+                log(f"[!] Failed margin adaptation: {margin_error}. Using base margin: {margin_pixels}px", log_entries, quiet=quiet_mode)
+
+            # ✂️ Step 5: Crop and resize with optional retry if edge is touched
+            def render_with_margin_and_test(img, temp_size, bbox, size, margin_px, enable_check, log_entries, quiet, x, y):
+                crop_left = max(x - margin_px, 0)
+                crop_top = max(y - margin_px, 0)
+                crop_right = min(x + (bbox[2] - bbox[0]) + margin_px, temp_size)
+                crop_bottom = min(y + (bbox[3] - bbox[1]) + margin_px, temp_size)
+
+                cropped = img.crop((crop_left, crop_top, crop_right, crop_bottom))
+                resized = cropped.resize((size, size), Image.LANCZOS)
+
+                # 🧪 Check visual borders
+                if enable_check:
+                    try:
+                        pixels = resized.load()
+                        width, height = resized.size
+                        touches_right = any(pixels[width - 1, y][3] != 0 for y in range(height))
+                        touches_bottom = any(pixels[x, height - 1][3] != 0 for x in range(width))
+                        if touches_right or touches_bottom:
+                            edge_info = []
+                            if touches_right: edge_info.append("right")
+                            if touches_bottom: edge_info.append("bottom")
+                            log(f"[!] Visual edge warning: emoji touches {', '.join(edge_info)} edge(s) at {size}x{size}", log_entries, quiet=quiet)
+                            log(f" ", log_entries, quiet=quiet)
+                            return resized, True
+                    except Exception as edge_error:
+                        log(f"[!] Visual edge test failed: {edge_error}", log_entries, quiet=quiet)
+
+                return resized, False
+
+            try:
+                resized_img, needs_retry = render_with_margin_and_test(
+                    img, temp_size, bbox, size, margin_pixels, enable_edge_check, log_entries, quiet_mode, x, y
+                )
+
+                # 🔁 Step 5b: Retry with increased margin
+                if needs_retry and enable_autofix_margin:
+                    retry_margin = int(margin_pixels * 1.4)
+                    log(f"[i] Re-rendering with increased margin: {retry_margin}px", log_entries, quiet=quiet_mode)
+                    resized_img, _ = render_with_margin_and_test(
+                        img, temp_size, bbox, size, retry_margin, False, log_entries, quiet_mode, x, y
+                    )
+
+            except Exception as crop_error:
+                log(f"[✗] Failed during cropping/resizing: {crop_error}", log_entries, quiet=quiet_mode)
+                continue
+
+
+
             filename = f"emoji_{size}x{size}.png"
             file_path = os.path.join(output_path, filename)
+
+            # 🧠 Step 6: Memory usage control
+            memory_mb = get_memory_usage_mb()
+            if memory_mb:
+                if memory_mb > memory_limit_mb:
+                    log(f"[✗] Aborting: Memory usage exceeded safe limit ({memory_mb:.1f} MB > {memory_limit_mb} MB)", log_entries, quiet=quiet_mode)
+                    write_log_if_needed(log_entries, log_file)
+                    print(f"[✗] Process aborted due to excessive memory usage: {memory_mb:.1f} MB")
+                    sys.exit(1)
+                elif memory_mb > 300:
+                    log(f"[!] Warning: Memory usage is high ({memory_mb:.1f} MB)", log_entries, quiet=quiet_mode)
 
             if os.path.exists(file_path):
                 log(f"[!] Overwriting existing file: {filename}", log_entries, quiet=quiet_mode)
@@ -249,18 +552,25 @@ Requirements:
             except (OSError, IOError) as e:
                 log(f"[✗] Failed to save {filename}: {e}", log_entries, quiet=quiet_mode)
                 continue
+            finally:
+                # 🔄 Step 7: Memory cleanup
+                for obj in ['draw', 'resized_img', 'img']:
+                    try:
+                        del locals()[obj]
+                    except:
+                        pass
 
-        log("✅ Icon set completed successfully.", log_entries, quiet=quiet_mode)
-        log("🚀 Folder ready for browser extension use.", log_entries, quiet=quiet_mode)
-        write_log_if_needed(log_entries, log_file)
 
 # ▶️ Entry point of the script when executed directly (not imported as a module)
 if __name__ == "__main__":
+    import traceback
+
     try:
         main()
     except Exception as e:
-        # ❗ Catch any unhandled exception and log it to a fallback file
-        error_msg = f"[✗] Unexpected error occurred: {e}"
+        # ❗ Catch any unhandled exception and log it to a fallback file with full traceback
+        error_trace = traceback.format_exc()
+        error_msg = f"[✗] Unexpected error occurred:\n{error_trace}"
         print(error_msg)
 
         try:
@@ -269,9 +579,10 @@ if __name__ == "__main__":
             os.makedirs(log_dir, exist_ok=True)
             log_file = os.path.join(log_dir, datetime.now().strftime("%Y%m%d") + "_error.log")
             with open(log_file, "a", encoding="utf-8") as f:
-                f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {error_msg}\n")
+                f.write(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n{error_msg}\n")
         except Exception as log_error:
             print(f"[!] Failed to write to fallback log file: {log_error}")
 
         sys.exit(1)  # 🔚 Ensure the process exits with error status
+
 
