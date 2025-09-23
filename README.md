@@ -6,26 +6,27 @@
 ![Python](https://img.shields.io/badge/python-3.11%2B-yellow?style=flat-square)
 ![Pillow](https://img.shields.io/badge/pillow-9.0%2B-brightgreen?style=flat-square)
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
+![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
 
 ---
 
 ## 📖 Table of Contents
 
-- [Description](#description)
-- [Features](#features)
-- [How It Works](#how-it-works)
-- [Options Available](#options-available)
-- [Recommended Configurations/Use](#recommended-configurationsuse)
-- [Technical Design](#technical-design)
-- [Installation](#installation)
-- [Privacy](#privacy)
-- [License](#license)
-- [Changelog](#changelog)
-- [Use Cases](#use-cases)
-- [Edge Cases & Warnings](#edge-cases--warnings)
-- [Support the Project](#support-the-project)
-- [Contributions](#contributions)
-- [Governance & Ethics](#governance--ethics)
+- 📌 [Description](#-description)
+- ✨ [Features](#-features)
+- ⚙️ [How It Works](#️-how-it-works)
+- 🛠️ [Options Available](#️-options-available)
+- 💡 [Recommended Configurations/Use](#-recommended-configurationsuse)
+- 🧱 [Technical Design](#-technical-design)
+- 📦 [Installation](#-installation)
+- 🔒 [Privacy](#-privacy)
+- 📄 [License](#-license)
+- 🧾 [Changelog](#-changelog)
+- 💡 [Use Cases](#-use-cases)
+- ⚠️ [Edge Cases & Warnings](#️-edge-cases--warnings)
+- 💖 [Support the Project](#-support-the-project)
+- 🤝 [Contributions](#-contributions)
+- 📚 [Governance & Ethics](#-governance--ethics)
 
 ---
 
@@ -766,16 +767,15 @@ We’re happy to support contributors at all experience levels.
 ---
 
 ![Made with ❤️ by del-Pacifico](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20by%20del--Pacifico-orange?style=flat-square)
-![Star this project](https://img.shields.io/github/stars/del-Pacifico/unicode_to_png?style=flat-square&logo=github)
+![Star this project](https://img.shields.io/github/stars/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![Donate](https://img.shields.io/badge/Donate-via%20PayPal-blue?style=flat-square&logo=paypal)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square)
 
 <!-- BADGE GROUP: QUALITY -->
-![No Tracking](https://img.shields.io/badge/Privacy-No%20tracking-blueviolet?style=flat-square&logo=shield)
 ![Lightweight](https://img.shields.io/badge/Built-lightweight-lightgrey?style=flat-square)
 ![Modular Design](https://img.shields.io/badge/Architecture-Modular-informational?style=flat-square)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=flat-square&logo=github)
 
-<!-- 👇 AI-related badges group -->
-![AI Assisted](https://img.shields.io/badge/AI-Generated_or_Assisted-blueviolet?style=flat-square&logo=openai)
-![GitHub Copilot](https://img.shields.io/badge/github_copilot-8957E5?style=for-the-badge&logo=github-copilot&logoColor=white)
+![Offline](https://img.shields.io/badge/Internet-None-lightgrey?style=flat-square)
+![No Data](https://img.shields.io/badge/Data-None-lightgrey?style=flat-square)
+![No Tracking](https://img.shields.io/badge/Tracking-None-lightgrey?style=flat-square)

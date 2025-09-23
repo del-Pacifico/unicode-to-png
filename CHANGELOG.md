@@ -5,6 +5,54 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.19.2] - 2025-09-23
+
+### 🔍 Review Summary
+
+Patch release focused on README navigation fixes, privacy badge refresh, and GitHub issue templates standardization.  
+No source code logic has been changed.
+
+---
+
+### ✨ Added
+
+- **.github/ISSUE_TEMPLATE/**
+  - `README.md`: Centralizes available templates (`bug_report.md`, `feature_request.md`, `hotfix.md`, `release_checklist.md`) and references `config.yml`.
+  - `hotfix.md`: YAML-based template for urgent and minimal production fixes.
+  - `release_checklist.md`: End-to-end checklist to plan and track releases.
+
+- **README.md**
+  - Added header badge: `Interface — CLI only`.
+  - Added footer quality badges: `Internet: None`, `Data: None`, `Tracking: None`.
+
+---
+
+### 📝 Changed
+
+- **README.md**
+  - Fixed all **Table of Contents** anchors to work across embedded GitHub contexts (Sponsors/Marketplace/mobile), aligning link targets with rendered IDs.
+  - Normalized repository links to the canonical slug `del-Pacifico/unicode-to-png` where applicable (e.g., “How to Contribute”).
+
+- **.github/ISSUE_TEMPLATE/config.yml**
+  - Updated `contact_links` to direct users to **Q&A** and **Ideas** categories, and added **Security Vulnerability Disclosure** via `security/policy`.
+  - Kept `blank_issues_enabled: false`.
+
+---
+
+### 🧹 Removed
+
+- **README.md**
+  - Removed AI-related footer badges (“AI-Generated_or_Assisted”, “GitHub Copilot”).
+  - Replaced the single privacy badge (“Privacy — No tracking”) with the three explicit status badges listed above.
+
+---
+
+### 🧾 Notes
+
+- No changes to emoji rendering logic, CLI behavior, or output files.
+
+---
+
 ## [1.19.1] - 2025-05-21
 
 ### 🔍 Review Summary
