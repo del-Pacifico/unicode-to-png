@@ -1,9 +1,9 @@
 # 🖼️ unicode_to_png
 
-![Version](https://img.shields.io/badge/version-1.19-blue?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.19.2-blue?style=flat-square)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-orange?style=flat-square)
-![Python](https://img.shields.io/badge/python-3.11%2B-yellow?style=flat-square)
+![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
 ![Pillow](https://img.shields.io/badge/pillow-9.0%2B-brightgreen?style=flat-square)
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
 ![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
@@ -32,7 +32,7 @@
 
 ## 📌 Description
 
-**Unicode to PNG v1.19** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
+**Unicode to PNG v1.19.2** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
 
 This script transforms any Unicode emoji—including single glyphs, composite sequences, skin tone modifiers, and complex ZWJ compositions—into high-resolution `.png` icons optimized for browser use (e.g., Chrome, Firefox, Edge).
 
@@ -56,7 +56,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   - Flag/tags (e.g., 🇨🇱, 🏴)
 
 - ⚙️ **Automatic Margin Compensation**  
-  Smart margin rendering ensures that emojis aren’t cropped at the top or right. Optional `--margin` or `--autofixmargin` lets the engine adjust bounding boxes on-demand.
+  Smart margin rendering ensures that emojis aren’t cropped at the top or right. Optional `--margin` controls padding manually, while `--autofixmargin` enables edge detection and retries with increased margin when needed.
 
 - 🧪 **Dual Input Mode**  
   - CLI: `--emoji`, `--batch` for scripting or CI/CD.
@@ -73,7 +73,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   All folder and alias inputs are automatically cleaned to avoid invalid filesystem characters.
 
 - 🔍 **Safe Logging System**  
-  Warnings, overwrites, and unexpected events are logged with timestamps. No noise unless necessary.
+  Warnings, overwrites, and unexpected events are logged with timestamps and severity levels. Console logs use `[utp] - LEVEL - message`; file logs use `[YYYY-MM-DD HH:MM:SS] [LEVEL] message`.
 
 - 🖥️ **Optimized for Windows**  
   Leverages `Segoe UI Emoji` for rich colored rendering on Windows 10/11. Falls back gracefully if missing.
@@ -81,6 +81,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 - ✅ **Minimal Requirements**  
   - Python ≥ 3.6  
   - Pillow ≥ 9.0  
+  - psutil optional, only for `--memlimit`  
   - No external API or web access needed
 
 ---
@@ -104,7 +105,7 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
    - Bounding box (`textbbox`) is calculated to center the emoji precisely.
 
 4. 🧠 **Smart Margin Correction (Optional)**  
-   - If `--autofixmargin` is used, the system detects visual cropping (top/right clipping) and reapplies the render with a padded margin.  
+   - If `--autofixmargin` is used, the system enables visual edge detection and reapplies the render with increased margin when clipping is detected.  
    - Ensures clean and professional-looking results at all sizes.
 
 5. 🖼️ **Icon Downsampling**  
@@ -116,7 +117,7 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
    - If any warnings, errors, or overwrites occur, they are logged into `log/YYYYMMDD_<base>_<alias>.log`
 
 7. 📡 **Silent Automation Support**  
-   - Use `--quiet` to suppress output in automation pipelines while preserving log creation.
+   - Use `--quiet` to suppress console output in automation pipelines while preserving log creation.
 
 8. 🧩 **Composite Emoji Handling**  
    - ZWJ sequences (👨‍👩‍👧‍👦), skin tones, gender variations, and presentation modifiers are rendered correctly and preserved during export.
@@ -258,8 +259,11 @@ All command-line options are optional unless noted. They can be combined for pow
 | `--batch`         | string   | No       | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).      |
 | `--folder`        | string   | No       | Base name for output folder(s). Sanitized to avoid invalid characters.     |
 | `--quiet`         | flag     | No       | Suppresses all console output. Logging still occurs if warnings/errors.    |
+| `--memlimit`      | integer  | No       | Aborts if process memory exceeds this MB value. Requires optional `psutil`. |
 | `--margin`        | float    | No       | Adds manual margin (e.g., `0.25` = 25%) around emoji.                      |
-| `--autofixmargin` | flag     | No       | Automatically detects and adjusts margins if visual cropping is detected.  |
+| `--edgecheck`     | flag     | No       | Detects if rendered pixels touch the right or bottom edge.                 |
+| `--autofixmargin` | flag     | No       | Enables edge detection and retries with increased margin if needed.        |
+| `--version`       | flag     | No       | Prints the CLI version read from the root `VERSION` file.                  |
 
 ---
 
@@ -270,7 +274,8 @@ All command-line options are optional unless noted. They can be combined for pow
 - **`--folder`** is appended to each alias to generate subfolder names.
 - **Margins**:
   - `--margin` is manually specified.
-  - `--autofixmargin` triggers a visual analysis during rendering and re-renders if necessary.
+  - `--edgecheck` only reports visual edge contact.
+  - `--autofixmargin` automatically enables edge checking and re-renders if necessary.
 
 ---
 
@@ -278,7 +283,7 @@ All command-line options are optional unless noted. They can be combined for pow
 
 - All folder and alias names are cleaned to use only letters, numbers, and underscores.
 - Emoji input must be printable Unicode.
-- If both `--margin` and `--autofixmargin` are used, `--autofixmargin` takes precedence.
+- If both `--margin` and `--autofixmargin` are used, the initial render uses the requested margin and the retry increases it only if edge contact is detected.
 - The script will halt gracefully with clear error messages if any invalid input is detected.
 
 ---
@@ -402,7 +407,7 @@ project_root/
 
 4. **Margin Adjustment**
    - If `--margin` is used: extra padding is manually added.
-   - If `--autofixmargin` is active: re-renders if edge pixels suggest clipping.
+   - If `--autofixmargin` is active: edge checking is enabled automatically and the image re-renders if edge pixels suggest clipping.
 
 5. **Downsampling**
    - Resizing from temporary canvas to final size uses `Image.LANCZOS` (high-quality).
@@ -427,6 +432,7 @@ project_root/
 - All options are optional, with fallbacks to interactive mode.
 - Batch execution via `--batch` supports `emoji:alias` pairs.
 - Flag `--quiet` disables all stdout output, ideal for silent automation.
+- Flag `--version` reads the release number from the root `VERSION` file.
 
 ---
 
@@ -505,6 +511,14 @@ py -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 python unicode_to_png.py --batch "🔥:fire,🎮:game" --folder my_icons
+```
+
+#### Optional memory monitoring
+
+`--memlimit` requires `psutil`. Install it only if you need memory-based aborts:
+
+```bash
+pip install psutil
 ```
 
 ---

@@ -5,6 +5,24 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Added root `VERSION` file as the canonical project version source.
+- Added `--version` CLI flag.
+
+### Changed
+
+- CLI now reads the banner version from `VERSION`.
+- `--autofixmargin` now enables edge checking automatically.
+- Pillow is now validated at runtime without attempting automatic installation.
+- Console output is now tolerant of legacy Windows encodings.
+- Console and file logs now use objective English messages with explicit severity levels.
+- Successful conversion runs now flush collected log entries to the configured log file.
+
+---
+
 ## [1.19.2] - 2025-09-23
 
 ### 🔍 Review Summary
