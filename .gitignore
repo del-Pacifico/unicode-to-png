@@ -5,6 +5,7 @@ log/
 # Ignore Codex validation artifacts explicitly
 emojis/codex_*/
 log/*codex_*.log
+REPORTE_ANALISIS_REPO.md
 
 # Ignore Python cache files
 __pycache__/
