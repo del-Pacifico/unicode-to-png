@@ -11,6 +11,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 - Added root `VERSION` file as the canonical project version source.
 - Added `--version` CLI flag.
+- Added baseline pytest coverage for version, sanitization, batch parsing, Unicode classification, margin calculation, and console message formatting.
+- Added `requirements-dev.txt` for development-only test dependencies.
 
 ### Changed
 

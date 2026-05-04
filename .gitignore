@@ -9,6 +9,7 @@ log/*codex_*.log
 # Ignore Python cache files
 __pycache__/
 *.py[cod]
+.pytest_cache/
 
 # Ignore virtual environments
 env/

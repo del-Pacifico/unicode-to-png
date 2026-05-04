@@ -521,6 +521,15 @@ python unicode_to_png.py --batch "🔥:fire,🎮:game" --folder my_icons
 pip install psutil
 ```
 
+#### Development tests
+
+Install development dependencies and run the unit test suite:
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
 ---
 
 ## 🔒 Privacy
