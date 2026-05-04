@@ -12,6 +12,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added root `VERSION` file as the canonical project version source.
 - Added `--version` CLI flag.
 - Added baseline pytest coverage for version, sanitization, batch parsing, Unicode classification, margin calculation, and console message formatting.
+- Added baseline CLI subprocess tests for `--help`, `--version`, invalid emoji input, and empty batch input.
 - Added `requirements-dev.txt` for development-only test dependencies.
 
 ### Changed
@@ -22,6 +23,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Console output is now tolerant of legacy Windows encodings.
 - Console and file logs now use objective English messages with explicit severity levels.
 - Successful conversion runs now flush collected log entries to the configured log file.
+- README release badge now uses the GitHub latest release badge instead of a hardcoded version value.
+- Repository links were normalized to `https://github.com/del-Pacifico/unicode-to-png`.
 
 ---
 
@@ -91,7 +94,7 @@ No source code logic has been changed.
 - **LICENSE**
   - 🔄 Updated repository reference to the correct GitHub organization:
     - From: `github.com/sergiopalmah/unicode_to_png`
-    - To: `github.com/del-Pacifico/unicode_to_png`
+    - To: `github.com/del-Pacifico/unicode-to-png`
 
 - **SECURITY.md**
   - 🔄 Bumped `Supported Version` table from `1.12` to `1.19` to match latest release.

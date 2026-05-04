@@ -1,6 +1,6 @@
 # 🖼️ unicode_to_png
 
-![Version](https://img.shields.io/badge/version-1.19.2-blue?style=flat-square)
+![Latest Release](https://img.shields.io/github/v/release/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-orange?style=flat-square)
 ![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
@@ -32,7 +32,7 @@
 
 ## 📌 Description
 
-**Unicode to PNG v1.19.2** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
+**Unicode to PNG** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
 
 This script transforms any Unicode emoji—including single glyphs, composite sequences, skin tone modifiers, and complex ZWJ compositions—into high-resolution `.png` icons optimized for browser use (e.g., Chrome, Firefox, Edge).
 
@@ -523,7 +523,7 @@ pip install psutil
 
 #### Development tests
 
-Install development dependencies and run the unit test suite:
+Install development dependencies and run the unit and CLI test suite:
 
 ```bash
 pip install -r requirements-dev.txt
@@ -735,7 +735,7 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
 ### 🔧 How to Contribute
 
 1. **Fork the Repository**  
-   Navigate to [https://github.com/del-Pacifico/unicode_to_png](https://github.com/del-Pacifico/unicode_to_png) and click on "Fork".
+   Navigate to [https://github.com/del-Pacifico/unicode-to-png](https://github.com/del-Pacifico/unicode-to-png) and click on "Fork".
 
 2. **Create a New Branch**  
    Use a descriptive name for your branch (e.g., `feature/batch-validation`):
@@ -789,14 +789,14 @@ We’re happy to support contributors at all experience levels.
 
 ---
 
-![Made with ❤️ by del-Pacifico](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20by%20del--Pacifico-orange?style=flat-square)
+![Maintained by del-Pacifico](https://img.shields.io/badge/Maintained%20by-del--Pacifico-orange?style=flat-square)
 ![Star this project](https://img.shields.io/github/stars/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![Donate](https://img.shields.io/badge/Donate-via%20PayPal-blue?style=flat-square&logo=paypal)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square)
 
 <!-- BADGE GROUP: QUALITY -->
 ![Lightweight](https://img.shields.io/badge/Built-lightweight-lightgrey?style=flat-square)
-![Modular Design](https://img.shields.io/badge/Architecture-Modular-informational?style=flat-square)
+![CLI Tool](https://img.shields.io/badge/Architecture-CLI%20tool-informational?style=flat-square)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=flat-square&logo=github)
 
 ![Offline](https://img.shields.io/badge/Internet-None-lightgrey?style=flat-square)

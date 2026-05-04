@@ -1,5 +1,3 @@
-import os
-
 import unicode_to_png as utp
 
 
