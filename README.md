@@ -530,6 +530,13 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
+The same development dependencies are also available through the optional package extra:
+
+```bash
+pip install -e .[dev]
+python -m pytest
+```
+
 ---
 
 ## 🔒 Privacy

@@ -14,6 +14,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added baseline pytest coverage for version, sanitization, batch parsing, Unicode classification, margin calculation, and console message formatting.
 - Added baseline CLI subprocess tests for `--help`, `--version`, invalid emoji input, and empty batch input.
 - Added `requirements-dev.txt` for development-only test dependencies.
+- Added `pyproject.toml` with package metadata, runtime dependencies, optional development dependencies, and pytest configuration.
 
 ### Changed
 
