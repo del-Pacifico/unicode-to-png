@@ -25,6 +25,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Successful conversion runs now flush collected log entries to the configured log file.
 - README release badge now uses the GitHub latest release badge instead of a hardcoded version value.
 - Repository links were normalized to `https://github.com/del-Pacifico/unicode-to-png`.
+- Pure helper logic was extracted into the internal `unicode_to_png/` package while preserving `python unicode_to_png.py` CLI compatibility.
 
 ---
 

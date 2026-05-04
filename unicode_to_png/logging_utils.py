@@ -1,0 +1,54 @@
+"""Console and file logging helpers for the Unicode to PNG CLI."""
+
+from datetime import datetime
+import sys
+
+
+def configure_console_output():
+    """Make console output tolerant of terminals that cannot encode emoji."""
+    for stream_name in ("stdout", "stderr"):
+        stream = getattr(sys, stream_name, None)
+        if hasattr(stream, "reconfigure"):
+            try:
+                stream.reconfigure(errors="replace")
+            except Exception:
+                pass
+
+
+def safe_print(message="", **kwargs):
+    """Print text without crashing on legacy Windows console encodings."""
+    try:
+        print(message, **kwargs)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+        safe_message = str(message).encode(encoding, errors="replace").decode(encoding, errors="replace")
+        print(safe_message, **kwargs)
+
+
+def safe_input(prompt):
+    safe_print(prompt, end="")
+    return input()
+
+
+def console_message(level, message):
+    """Build a consistent console message."""
+    return f"[utp] - {level.upper()} - {message}"
+
+
+def log(message, log_entries, quiet=False, level="INFO", detail=None):
+    """Record a log message and print it to the console unless quiet mode is enabled."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    normalized_level = level.upper()
+    line = f"[{timestamp}] [{normalized_level}] {message}"
+    if detail:
+        line = f"{line} Detail: {detail}"
+    if not quiet:
+        safe_print(console_message(normalized_level, message))
+    log_entries.append(line)
+
+
+def write_log_if_needed(log_entries, log_file):
+    """Write collected log entries to file when entries exist."""
+    if log_entries:
+        with open(log_file, "a", encoding="utf-8") as f:
+            f.write("\n".join(log_entries) + "\n")

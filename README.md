@@ -452,12 +452,12 @@ project_root/
 
 Each functionality is clearly isolated for maintainability and testability:
 
-- `main()`: high-level orchestration.
-- `parse_args()`: CLI argument handling.
-- `parse_batch()`: emoji batch logic and alias assignment.
-- `log()` / `write_log_if_needed()`: consistent, timestamped logging.
-- `load_font()`: font loading abstraction with fallback logic.
-- `prepare_log_path()`: automatic log path management.
+- `unicode_to_png.py`: CLI orchestration and rendering workflow.
+- `unicode_to_png/version.py`: version file reading.
+- `unicode_to_png/batch_utils.py`: emoji batch parsing and alias assignment.
+- `unicode_to_png/path_utils.py`: folder sanitization and log path preparation.
+- `unicode_to_png/logging_utils.py`: console-safe output and structured logging.
+- `unicode_to_png/unicode_utils.py`: emoji validation, structure classification, margin calculation, and positioning helpers.
 
 ---
 

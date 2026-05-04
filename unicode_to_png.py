@@ -25,9 +25,25 @@ for web and extension projects.
 import sys
 import platform
 import os
-import re
 from datetime import datetime
 import argparse
+
+from unicode_to_png import (
+    classify_unicode_structure,
+    configure_console_output,
+    console_message,
+    get_adjusted_margin,
+    get_adjusted_position,
+    is_emoji,
+    log,
+    parse_batch,
+    prepare_log_path,
+    read_version,
+    safe_input,
+    safe_print,
+    sanitize_folder_name,
+    write_log_if_needed,
+)
 
 # Enforce the minimum supported Python version before running the CLI.
 if sys.version_info < (3, 6):
@@ -46,43 +62,6 @@ try:
     HAS_PSUTIL = True
 except ImportError:
     pass
-
-def configure_console_output():
-    """Make console output tolerant of terminals that cannot encode emoji."""
-    for stream_name in ("stdout", "stderr"):
-        stream = getattr(sys, stream_name, None)
-        if hasattr(stream, "reconfigure"):
-            try:
-                stream.reconfigure(errors="replace")
-            except Exception:
-                pass
-
-def safe_print(message="", **kwargs):
-    """Print text without crashing on legacy Windows console encodings."""
-    try:
-        print(message, **kwargs)
-    except UnicodeEncodeError:
-        encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
-        safe_message = str(message).encode(encoding, errors="replace").decode(encoding, errors="replace")
-        print(safe_message, **kwargs)
-
-def safe_input(prompt):
-    safe_print(prompt, end="")
-    return input()
-
-def console_message(level, message):
-    """Build a consistent console message."""
-    return f"[utp] - {level.upper()} - {message}"
-
-def read_version():
-    """Read the project version from the root VERSION file."""
-    version_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "VERSION")
-    try:
-        with open(version_file, "r", encoding="utf-8") as f:
-            version = f.read().strip()
-            return version or "0.0.0"
-    except OSError:
-        return "0.0.0"
 
 def ensure_runtime_dependencies():
     """Ensure runtime dependencies are installed without modifying the environment."""
@@ -126,184 +105,6 @@ def parse_args():
     parser.add_argument("--version", action="version", version=f"unicode_to_png {read_version()}")
     return parser.parse_args()
 
-# Remove characters from a folder name unless they are alphanumeric or underscores.
-def sanitize_folder_name(name):
-    return re.sub(r'[^a-zA-Z0-9_]', '_', name).strip('_')
-    
-# Validate whether a character belongs to common Unicode emoji ranges.
-def is_emoji(character):
-    return any([
-        '\U0001F300' <= character <= '\U0001F5FF',  # Misc Symbols and Pictographs
-        '\U0001F600' <= character <= '\U0001F64F',  # Emoticons
-        '\U0001F680' <= character <= '\U0001F6FF',  # Transport and Map Symbols
-        '\U0001F700' <= character <= '\U0001F77F',  # Alchemical Symbols
-        '\U0001F780' <= character <= '\U0001F7FF',  # Geometric Shapes Extended
-        '\U0001F800' <= character <= '\U0001F8FF',  # Supplemental Arrows-C
-        '\U0001F900' <= character <= '\U0001F9FF',  # Supplemental Symbols and Pictographs
-        '\U0001FA00' <= character <= '\U0001FA6F',  # Extended-A
-        '\U0001FA70' <= character <= '\U0001FAFF',  # Extended-B
-        '\u2600'     <= character <= '\u26FF',      # Misc symbols
-        '\u2700'     <= character <= '\u27BF',      # Dingbats
-    ])
-    
-# Classify the emoji based on its Unicode structure.
-def classify_unicode_structure(emoji: str) -> str:
-    """
-    Classifies the emoji into structural categories:
-    SIMPLE, SKIN_MODIFIER, PRESENTATION_SELECTOR, ZWJ_SEQUENCE, REGIONAL_FLAG, COMPLEX.
-
-    Args:
-        emoji (str): The emoji character string.
-
-    Returns:
-        str: Classification category.
-    """
-    try:
-        codepoints = [ord(c) for c in emoji]
-
-        # ZWJ-based sequence.
-        if 0x200D in codepoints:
-            return "ZWJ_SEQUENCE"
-
-        # Base emoji with skin tone modifier.
-        if any(0x1F3FB <= cp <= 0x1F3FF for cp in codepoints):
-            return "SKIN_MODIFIER"
-
-        # Emoji with presentation selector.
-        if 0xFE0F in codepoints:
-            return "PRESENTATION_SELECTOR"
-
-        # Regional indicator flags.
-        if all(0x1F1E6 <= cp <= 0x1F1FF for cp in codepoints):
-            return "REGIONAL_FLAG"
-
-        # Single code point emoji.
-        if len(codepoints) == 1:
-            return "SIMPLE"
-
-        # Any unrecognized structure.
-        return "COMPLEX"
-
-    except Exception:
-        return "COMPLEX"
-        
-# Compute final margin based on structure type.
-def get_adjusted_margin(structure_type, base_ratio, size_px):
-    """
-    Calculates a structure-aware margin in pixels.
-
-    Args:
-        structure_type (str): Classification from classify_unicode_structure(...)
-        base_ratio (float): User-defined or default margin ratio
-        size_px (int): Canvas size in pixels
-
-    Returns:
-        int: Total margin in pixels
-    """
-    boost = {
-        "SKIN_MODIFIER": 0.10,
-        "PRESENTATION_SELECTOR": 0.08,
-        "ZWJ_SEQUENCE": 0.12,
-        "REGIONAL_FLAG": 0.06,
-        "COMPLEX": 0.15
-    }.get(structure_type, 0.0)
-
-    total_ratio = base_ratio + boost
-    return int(size_px * total_ratio)
-
-# Compute final render position with vertical compensation.
-def get_adjusted_position(structure_type, temp_size, bbox, log_entries, quiet):
-    """
-    Returns corrected (x, y) coordinates for drawing emoji, compensating for Unicode type.
-
-    Args:
-        structure_type (str): Classification from classify_unicode_structure(...)
-        temp_size (int): Base canvas size
-        bbox (tuple): Bounding box from draw.textbbox()
-        log_entries (list): Log collection
-        quiet (bool): Suppress console output
-
-    Returns:
-        tuple: (x, y) coordinates
-    """
-    try:
-        width = bbox[2] - bbox[0]
-        height = bbox[3] - bbox[1]
-        x = (temp_size - width) // 2 - bbox[0]
-        y = (temp_size - height) // 2 - bbox[1]
-
-        # Vertical lift applied by structure type.
-        y_lift = {
-            "SKIN_MODIFIER": 0.03,
-            "PRESENTATION_SELECTOR": 0.02,
-            "ZWJ_SEQUENCE": 0.05,
-            "REGIONAL_FLAG": 0.01,
-            "COMPLEX": 0.04
-        }.get(structure_type, 0.0)
-
-        y -= int(temp_size * y_lift)
-        x = max(x, 0)
-        y = max(y, 0)
-
-        log(f"Computed render position: x={x}px, y={y}px, structure={structure_type}.", log_entries, quiet=quiet, level="DEBUG")
-        return (x, y)
-
-    except Exception as err:
-        log(f"Using fallback render position after position calculation failed: {err}", log_entries, quiet=quiet, level="WARNING")
-        return (temp_size // 4, temp_size // 4)
-
-# Parse the --batch argument into emoji and alias pairs.
-def parse_batch(batch_string):
-    pairs = []
-    warnings = []
-    fallback_count = 1
-    for entry_number, entry in enumerate(batch_string.split(','), start=1):
-        parts = entry.strip().split(':')
-        emoji = parts[0].strip()
-        if not emoji or not emoji.isprintable():
-            warnings.append(f"Skipped batch entry {entry_number} because the emoji value is empty or not printable.")
-            continue
-
-        # Get alias if present and sanitize it.
-        if len(parts) > 1 and parts[1].strip():
-            alias = sanitize_folder_name(parts[1].strip())
-            if not alias:
-                alias = f"emoji{fallback_count}"
-                fallback_count += 1
-                warnings.append(f"Batch entry {entry_number} alias was empty after sanitization. Fallback alias '{alias}' was used.")
-        else:
-            alias = f"emoji{fallback_count}"
-            fallback_count += 1
-            warnings.append(f"Batch entry {entry_number} has no alias. Fallback alias '{alias}' was used.")
-
-        pairs.append((emoji, alias))
-    return pairs, warnings
-
-# Prepare the full path to the log file and ensure the log directory exists.
-def prepare_log_path(base_dir, folder_name):
-    log_dir = os.path.join(base_dir, "log")
-    os.makedirs(log_dir, exist_ok=True)
-    date_str = datetime.now().strftime("%Y%m%d")
-    log_filename = f"{date_str}_{folder_name}.log"
-    return os.path.join(log_dir, log_filename)
-
-# Record a log message and print it to the console unless quiet mode is enabled.
-def log(message, log_entries, quiet=False, level="INFO", detail=None):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    normalized_level = level.upper()
-    line = f"[{timestamp}] [{normalized_level}] {message}"
-    if detail:
-        line = f"{line} Detail: {detail}"
-    if not quiet:
-        safe_print(console_message(normalized_level, message))
-    log_entries.append(line)
-
-# Write collected log entries to file when entries exist.
-def write_log_if_needed(log_entries, log_file):
-    if log_entries:
-        with open(log_file, "a", encoding="utf-8") as f:
-            f.write('\n'.join(log_entries) + "\n")
-            
 # Return memory usage in MB for the current process when psutil is available.
 def get_memory_usage_mb():
     if not HAS_PSUTIL:
