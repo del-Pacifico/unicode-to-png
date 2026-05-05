@@ -252,19 +252,22 @@ python unicode_to_png.py --batch "👩‍💻:developer,🧑‍🚒:firefighter"
 
 ## 🛠️ Options Available
 
-All command-line options are optional unless noted. They can be combined for powerful customization and automation.
+Generation commands require `--folder` and either `--emoji` or `--batch`. Informational commands such as `--help`, `--examples`, and `--version` exit without rendering.
 
 | Option            | Type     | Required | Description                                                                 |
 |-------------------|----------|----------|-----------------------------------------------------------------------------|
-| `--emoji`         | string   | No       | A single emoji to convert (e.g., `"🧠"`).                                   |
-| `--batch`         | string   | No       | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).      |
-| `--folder`        | string   | No       | Base name for output folder(s). Sanitized to avoid invalid characters.     |
+| `--emoji`         | string   | Yes*     | A single emoji to convert (e.g., `"🧠"`).                                  |
+| `--batch`         | string   | Yes*     | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).     |
+| `--folder`        | string   | Yes      | Base name for output folder(s). Sanitized to avoid invalid characters.     |
 | `--quiet`         | flag     | No       | Suppresses all console output. Logging still occurs if warnings/errors.    |
 | `--memlimit`      | integer  | No       | Aborts if process memory exceeds this MB value. Requires optional `psutil`. |
 | `--margin`        | float    | No       | Adds manual margin (e.g., `0.25` = 25%) around emoji.                      |
 | `--edgecheck`     | flag     | No       | Detects if rendered pixels touch the right or bottom edge.                 |
 | `--autofixmargin` | flag     | No       | Enables edge detection and retries with increased margin if needed.        |
+| `--examples`      | flag     | No       | Prints detailed CLI examples and exits without rendering.                  |
 | `--version`       | flag     | No       | Prints the CLI version read from the root `VERSION` file.                  |
+
+`*` Use either `--emoji` or `--batch` for generation.
 
 ---
 
@@ -273,6 +276,7 @@ All command-line options are optional unless noted. They can be combined for pow
 - **`--emoji` vs `--batch`**: Only one of them should be used at a time.
 - **Aliases in `--batch`** are required for meaningful folder naming (e.g., `🎮:game`).
 - **`--folder`** is appended to each alias to generate subfolder names.
+- **Detailed examples** are available with `python unicode_to_png.py --examples`.
 - **Margins**:
   - `--margin` is manually specified.
   - `--edgecheck` only reports visual edge contact.
@@ -541,6 +545,14 @@ python -m pytest
 
 The test suite includes CLI integration coverage for generated PNG dimensions, image format, and non-empty alpha content.
 The Windows CI workflow runs the same validation set on GitHub Actions for supported branches.
+
+#### Usage documentation
+
+Detailed usage guidance is available in [`docs/USAGE.md`](docs/USAGE.md). CLI examples are also available with:
+
+```bash
+python unicode_to_png.py --examples
+```
 
 ---
 

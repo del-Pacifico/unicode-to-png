@@ -54,6 +54,22 @@ def test_cli_help_returns_usage_without_runtime_dependency_checks():
     assert result.returncode == 0
     assert "usage: unicode_to_png.py" in result.stdout
     assert "--version" in result.stdout
+    assert "Usage rules:" in result.stdout
+    assert "Examples:" in result.stdout
+    assert "python unicode_to_png.py --emoji" in result.stdout
+    assert "python unicode_to_png.py --examples" in result.stdout
+    assert result.stderr == ""
+
+
+def test_cli_examples_returns_detailed_examples_without_runtime_dependency_checks():
+    result = run_cli("--examples")
+
+    assert result.returncode == 0
+    assert "Unicode to PNG CLI examples" in result.stdout
+    assert "Basic single emoji:" in result.stdout
+    assert "Medium batch generation:" in result.stdout
+    assert "Automatic edge correction:" in result.stdout
+    assert "docs/USAGE.md" in result.stdout
     assert result.stderr == ""
 
 

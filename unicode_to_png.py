@@ -27,6 +27,7 @@ import platform
 import os
 from datetime import datetime
 import argparse
+import textwrap
 
 from unicode_to_png import (
     classify_unicode_structure,
@@ -89,9 +90,87 @@ def ensure_runtime_dependencies():
     return True
 
 # Configure CLI argument parsing.
+HELP_EPILOG = """
+Usage rules:
+  - Provide either --emoji or --batch.
+  - Provide --folder for every generation run.
+  - When --emoji and --batch are both provided, --batch is used and --emoji is ignored.
+  - The CLI never asks for keyboard input. Missing required values return an error.
+  - Windows is required for supported color emoji rendering.
+
+Examples:
+  Basic:
+    python unicode_to_png.py --emoji "<emoji>" --folder target_icon
+
+  Medium:
+    python unicode_to_png.py --batch "<emoji>:fire,<emoji>:game" --folder browser_icons
+
+  Advanced:
+    python unicode_to_png.py --batch "<emoji>:developer,<emoji>:firefighter" --folder heroes --quiet --autofixmargin
+
+Output:
+  - PNG icons are written to emojis/<folder>/emoji_<size>x<size>.png.
+  - Runtime logs are written to log/YYYYMMDD_<folder>.log when warnings, errors, or operational events are recorded.
+
+More examples:
+  python unicode_to_png.py --examples
+"""
+
+EXAMPLES_TEXT = """
+Unicode to PNG CLI examples
+
+Basic single emoji:
+  python unicode_to_png.py --emoji "<emoji>" --folder target_icon
+  Output: emojis/target_icon/emoji_16x16.png ... emoji_128x128.png
+
+Medium batch generation:
+  python unicode_to_png.py --batch "<emoji>:fire,<emoji>:game,<emoji>:idea" --folder browser_icons
+  Output:
+    emojis/browser_icons_fire/emoji_*.png
+    emojis/browser_icons_game/emoji_*.png
+    emojis/browser_icons_idea/emoji_*.png
+
+Automation with quiet console:
+  python unicode_to_png.py --batch "<emoji>:package,<emoji>:rocket" --folder release_assets --quiet
+  Console output is suppressed. Runtime events are still written to log files when collected.
+
+Manual margin control:
+  python unicode_to_png.py --emoji "<emoji>" --folder centered_icon --margin 0.2
+  Use this when a fixed visual margin is required.
+
+Automatic edge correction:
+  python unicode_to_png.py --emoji "<emoji>" --folder astronaut --autofixmargin
+  Enables edge detection and retries rendering with increased margin when needed.
+
+Memory monitoring:
+  python unicode_to_png.py --batch "<emoji>:brain,<emoji>:science" --folder edu_pack --memlimit 500
+  Requires psutil. If psutil is missing, the CLI logs a warning and continues without memory monitoring.
+
+Mixed input rule:
+  python unicode_to_png.py --emoji "<emoji>" --batch "<emoji>:fire" --folder icons
+  --batch takes priority and --emoji is ignored with a warning.
+
+Invalid usage examples:
+  python unicode_to_png.py
+  Error: No emoji input was provided. Use --emoji or --batch.
+
+  python unicode_to_png.py --emoji "<emoji>"
+  Error: No output folder name was provided. Use --folder.
+
+Detailed usage document:
+  docs/USAGE.md
+"""
+
+
+def build_help_text(text):
+    return textwrap.dedent(text).strip()
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Generate browser extension icons from a single emoji or emoji batch."
+        description="Generate browser extension PNG icons from emoji input using explicit CLI arguments.",
+        epilog=build_help_text(HELP_EPILOG),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--emoji", type=str, help="Emoji to generate.", required=False)
     parser.add_argument("--folder", type=str, help="Folder name to save icons", required=False)
@@ -101,6 +180,7 @@ def parse_args():
     parser.add_argument("--margin", type=float, help="Extra margin ratio (0.0 - 1.0) to prevent emoji clipping (default: 0.25)", required=False)
     parser.add_argument("--edgecheck", action="store_true", help="Enable visual edge test to detect emoji touching final image borders.")
     parser.add_argument("--autofixmargin", action="store_true", help="Enable edge check and re-render with increased margin if the emoji touches an edge.")
+    parser.add_argument("--examples", action="store_true", help="Show detailed CLI examples and exit.")
     parser.add_argument("--version", action="version", version=f"unicode_to_png {read_version()}")
     return parser.parse_args()
 
@@ -170,6 +250,10 @@ def main():
     args = parse_args()
     quiet_mode = args.quiet
     startup_warnings = []
+
+    if args.examples:
+        safe_print(build_help_text(EXAMPLES_TEXT))
+        sys.exit(0)
 
     if platform.system() != "Windows":
         safe_print(console_message("ERROR", "This script requires Windows for supported color emoji rendering."))

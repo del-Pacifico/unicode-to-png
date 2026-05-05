@@ -17,6 +17,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added `requirements-dev.txt` for development-only test dependencies.
 - Added `pyproject.toml` with package metadata, runtime dependencies, optional development dependencies, and pytest configuration.
 - Added a Windows GitHub Actions workflow for dependency installation, compilation, pytest, and CLI smoke checks.
+- Added robust CLI help, detailed `--examples` output, and `docs/USAGE.md` for extended usage guidance.
 
 ### Changed
 
