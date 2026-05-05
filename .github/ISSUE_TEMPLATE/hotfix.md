@@ -10,7 +10,7 @@ assignees: []
 Guidelines:
 - Keep scope minimal; no refactors or opportunistic changes.
 - Provide reproducible steps, risks, rollback plan, and test plan.
-- Code must follow project standards (Python 3.11, Pillow 11.2.1, Google-style docstrings, professional error handling, console logs with begin...end).
+- Code must follow project standards, supported Python versions, declared dependency constraints, professional error handling, and objective console logs.
 - All content in English.
 -->
 
@@ -93,7 +93,7 @@ Explain the likely cause in one or two paragraphs. Link to code lines if possibl
 - [ ] Risks and mitigations documented.
 - [ ] Rollback plan documented and tested (if feasible).
 - [ ] Test plan covers success, failure, and edge cases.
-- [ ] Code follows project standards (Google-style docstrings, error handling, **begin...end** logs).
+- [ ] Code follows project standards, robust error handling, and objective console logs.
 - [ ] Security and privacy considerations reviewed.
 - [ ] CHANGELOG updated (if applicable).
 - [ ] Release plan agreed and communicated.

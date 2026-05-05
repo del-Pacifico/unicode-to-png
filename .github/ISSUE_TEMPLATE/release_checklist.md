@@ -9,7 +9,7 @@ assignees: []
 <!--
 Guidelines:
 - Keep the scope of the release focused and well-defined.
-- Ensure code follows project standards (Python 3.11, Pillow 11.2.1, Google-style docstrings, professional error handling, console logs with begin...end).
+- Ensure code follows project standards, supported Python versions, declared dependency constraints, professional error handling, and objective console logs.
 - All content in English.
 -->
 
@@ -33,9 +33,9 @@ Briefly describe the release goal(s), scope, and target date.
 ## Readiness (Code & Quality)
 
 - [ ] All changes merged into the target branch (e.g., `main`) from reviewed PRs.
-- [ ] Code follows standards: Google-style docstrings, robust error handling, **begin...end** console logs.
+- [ ] Code follows project standards, robust error handling, and objective console logs.
 - [ ] No TODOs or commented-out code left in release paths.
-- [ ] Dependencies reviewed and pinned as needed (`requirements.txt` includes Python 3.11-compatible pins; Pillow 11.2.1).
+- [ ] Dependencies reviewed against `requirements.txt`, `requirements-dev.txt`, and `pyproject.toml`.
 - [ ] Security/privacy review completed (no secrets, tokens, or sensitive data in repo or logs).
 
 ## Tests & Verification
@@ -63,7 +63,7 @@ Briefly describe the release goal(s), scope, and target date.
 ## Release Notes
 
 - [ ] Draft GitHub Release notes include:
-  - Overview of changes (Added/Changed/FIxed/Removed)
+  - Overview of changes (Added/Changed/Fixed/Removed)
   - Upgrade notes / breaking changes
   - Known issues and workarounds
 - [ ] Links to related issues/PRs included.

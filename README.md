@@ -697,7 +697,7 @@ While the script is robust and production-ready, the following edge cases and pl
 ### 🛑 Mixed Inputs (emoji + batch)
 
 - Do not use `--emoji` and `--batch` simultaneously.
-  - The script will prioritize `--batch` if both are present, but behavior is undefined.
+  - The script prioritizes `--batch` and reports a warning when both options are provided.
 - Stick to one mode per execution.
 
 ---
