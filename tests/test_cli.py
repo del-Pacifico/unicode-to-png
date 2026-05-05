@@ -1,10 +1,16 @@
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+from PIL import Image
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = PROJECT_ROOT / "unicode_to_png.py"
+EMOJIS_ROOT = PROJECT_ROOT / "emojis"
+LOG_ROOT = PROJECT_ROOT / "log"
+ICON_SIZES = (16, 19, 32, 38, 48, 128)
 
 
 def run_cli(*args):
@@ -17,6 +23,29 @@ def run_cli(*args):
         errors="replace",
         check=False,
     )
+
+
+def cleanup_codex_artifacts(*folder_names):
+    for folder_name in folder_names:
+        shutil.rmtree(EMOJIS_ROOT / folder_name, ignore_errors=True)
+
+    if LOG_ROOT.exists():
+        for folder_name in folder_names:
+            for log_file in LOG_ROOT.glob(f"*{folder_name}.log"):
+                log_file.unlink(missing_ok=True)
+
+
+def assert_valid_icon_set(output_folder):
+    for size in ICON_SIZES:
+        icon_path = output_folder / f"emoji_{size}x{size}.png"
+        assert icon_path.exists()
+        assert icon_path.stat().st_size > 0
+
+        with Image.open(icon_path) as icon:
+            assert icon.format == "PNG"
+            assert icon.size == (size, size)
+            assert icon.mode == "RGBA"
+            assert icon.getchannel("A").getbbox() is not None
 
 
 def test_cli_help_returns_usage_without_runtime_dependency_checks():
@@ -53,3 +82,39 @@ def test_cli_batch_without_valid_entries_exits_before_rendering():
     assert "[utp] - ERROR - No valid emoji entries were provided." in result.stdout
     assert result.stderr == ""
     assert not (PROJECT_ROOT / "emojis" / "cli_empty_batch").exists()
+
+
+def test_cli_generates_valid_png_icon_set_for_single_emoji():
+    folder_name = "codex_integration_single"
+    cleanup_codex_artifacts(folder_name)
+
+    try:
+        result = run_cli("--emoji", "😀", "--folder", folder_name, "--quiet")
+
+        assert result.returncode == 0
+        assert result.stderr == ""
+        assert_valid_icon_set(EMOJIS_ROOT / folder_name)
+    finally:
+        cleanup_codex_artifacts(folder_name)
+
+
+def test_cli_generates_valid_png_icon_sets_for_batch_input():
+    folder_base = "codex_integration_batch"
+    output_folders = (f"{folder_base}_fire", f"{folder_base}_target")
+    cleanup_codex_artifacts(*output_folders)
+
+    try:
+        result = run_cli(
+            "--batch",
+            "🔥:fire,🎯:target",
+            "--folder",
+            folder_base,
+            "--quiet",
+        )
+
+        assert result.returncode == 0
+        assert result.stderr == ""
+        for output_folder in output_folders:
+            assert_valid_icon_set(EMOJIS_ROOT / output_folder)
+    finally:
+        cleanup_codex_artifacts(*output_folders)

@@ -537,6 +537,7 @@ pip install -e .[dev]
 python -m pytest
 ```
 
+The test suite includes CLI integration coverage for generated PNG dimensions, image format, and non-empty alpha content.
 The Windows CI workflow runs the same validation set on GitHub Actions for supported branches.
 
 ---
