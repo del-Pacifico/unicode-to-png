@@ -256,14 +256,24 @@ def main():
 
     base_path = os.path.dirname(os.path.abspath(__file__))
     emojis_root = os.path.join(base_path, "emojis")
-    os.makedirs(emojis_root, exist_ok=True)
+    try:
+        os.makedirs(emojis_root, exist_ok=True)
+    except OSError as root_error:
+        safe_print(console_message("ERROR", f"Failed to prepare output root directory: {emojis_root}."))
+        safe_print(console_message("ERROR", f"Output root error detail: {root_error}"))
+        sys.exit(1)
 
     # Process each emoji and alias pair.
     for index, (emoji, alias) in enumerate(emoji_pairs, start=1):
         # Generate folder name based on CLI --folder when not in batch mode.
         subfolder_name = f"{folder_base}" if alias == "single" else f"{folder_base}_{alias}"
         output_path = os.path.join(emojis_root, subfolder_name)
-        os.makedirs(output_path, exist_ok=True)
+        try:
+            os.makedirs(output_path, exist_ok=True)
+        except OSError as output_error:
+            safe_print(console_message("WARNING", f"Output folder could not be prepared and will be skipped: {output_path}"))
+            safe_print(console_message("WARNING", f"Output folder error detail: {output_error}"))
+            continue
 
 
         if not os.access(output_path, os.W_OK):

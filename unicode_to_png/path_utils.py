@@ -13,7 +13,11 @@ def sanitize_folder_name(name):
 def prepare_log_path(base_dir, folder_name):
     """Prepare the full path to the log file and ensure the log directory exists."""
     log_dir = os.path.join(base_dir, "log")
-    os.makedirs(log_dir, exist_ok=True)
+    try:
+        os.makedirs(log_dir, exist_ok=True)
+    except OSError:
+        return None
+
     date_str = datetime.now().strftime("%Y%m%d")
     log_filename = f"{date_str}_{folder_name}.log"
     return os.path.join(log_dir, log_filename)

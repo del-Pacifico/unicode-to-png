@@ -49,6 +49,19 @@ def log(message, log_entries, quiet=False, level="INFO", detail=None):
 
 def write_log_if_needed(log_entries, log_file):
     """Write collected log entries to file when entries exist."""
-    if log_entries:
+    if not log_entries:
+        return True
+
+    if not log_file:
+        safe_print(console_message("WARNING", "Log file path is unavailable. Runtime log entries were not persisted."))
+        return False
+
+    try:
         with open(log_file, "a", encoding="utf-8") as f:
             f.write("\n".join(log_entries) + "\n")
+    except OSError as error:
+        safe_print(console_message("WARNING", f"Failed to write runtime log file: {log_file}."))
+        safe_print(console_message("WARNING", f"Log persistence error detail: {error}"))
+        return False
+
+    return True

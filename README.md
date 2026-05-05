@@ -445,6 +445,7 @@ project_root/
 - **Folder/alias names**: sanitized to allow only `[a-zA-Z0-9_]`.
 - **Rendering safety**: verifies transparent image result and logs warnings.
 - **File overwrite detection**: notifies if `emoji_*.png` is being replaced.
+- **Filesystem resilience**: reports output and log persistence failures clearly, and skips only the affected batch item when continuation is possible.
 
 ---
 
@@ -477,7 +478,7 @@ Unicode to PNG follows high technical standards to ensure reliability, performan
 - **Defensive Programming**  
   The tool is designed to continue functioning even in edge cases such as unsupported emojis, missing fonts, or invalid input. Errors are logged; failures are contained.
 
-asset practices ensure the script is safe for automation pipelines, resource-constrained systems, and batch processing.
+These practices ensure the script is safe for automation pipelines, resource-constrained systems, and batch processing.
 
 ---
 
