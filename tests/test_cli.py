@@ -1,3 +1,12 @@
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+#
+# Original Author: Sergio Palma Hidalgo
+# Project URL: https://github.com/del-Pacifico/unicode-to-png
+# Copyright (c) 2025 Sergio Palma Hidalgo
+# All rights reserved.
+#
 import shutil
 import subprocess
 import sys
@@ -35,9 +44,9 @@ def cleanup_codex_artifacts(*folder_names):
                 log_file.unlink(missing_ok=True)
 
 
-def assert_valid_icon_set(output_folder):
+def assert_valid_icon_set(output_folder, filename_prefix="emoji"):
     for size in ICON_SIZES:
-        icon_path = output_folder / f"emoji_{size}x{size}.png"
+        icon_path = output_folder / f"{filename_prefix}_{size}x{size}.png"
         assert icon_path.exists()
         assert icon_path.stat().st_size > 0
 
@@ -57,6 +66,7 @@ def test_cli_help_returns_usage_without_runtime_dependency_checks():
     assert "Usage rules:" in result.stdout
     assert "Examples:" in result.stdout
     assert "python unicode_to_png.py --emoji" in result.stdout
+    assert "--filename-prefix" in result.stdout
     assert "python unicode_to_png.py --examples" in result.stdout
     assert result.stderr == ""
 
@@ -118,6 +128,31 @@ def test_cli_batch_without_valid_entries_exits_before_rendering():
     assert not (PROJECT_ROOT / "emojis" / "cli_empty_batch").exists()
 
 
+def test_cli_rejects_conflicting_filename_prefix_options():
+    result = run_cli(
+        "--emoji",
+        "😀",
+        "--folder",
+        "cli_conflicting_prefix",
+        "--filename-prefix",
+        "custom",
+        "--filename-prefix-from-folder",
+        "--quiet",
+    )
+
+    assert result.returncode == 1
+    assert "[utp] - ERROR - Use either --filename-prefix or --filename-prefix-from-folder, not both." in result.stdout
+    assert result.stderr == ""
+
+
+def test_cli_rejects_empty_filename_prefix_after_sanitization():
+    result = run_cli("--emoji", "😀", "--folder", "cli_empty_prefix", "--filename-prefix", "!!!", "--quiet")
+
+    assert result.returncode == 1
+    assert "[utp] - ERROR - Filename prefix '!!!' is empty after sanitization." in result.stdout
+    assert result.stderr == ""
+
+
 def test_cli_generates_valid_png_icon_set_for_single_emoji():
     folder_name = "codex_integration_single"
     cleanup_codex_artifacts(folder_name)
@@ -150,5 +185,53 @@ def test_cli_generates_valid_png_icon_sets_for_batch_argument():
         assert result.stderr == ""
         for output_folder in output_folders:
             assert_valid_icon_set(EMOJIS_ROOT / output_folder)
+    finally:
+        cleanup_codex_artifacts(*output_folders)
+
+
+def test_cli_generates_valid_png_icon_set_with_custom_filename_prefix():
+    folder_name = "codex_custom_prefix"
+    filename_prefix = "chrome_icon"
+    cleanup_codex_artifacts(folder_name)
+
+    try:
+        result = run_cli(
+            "--emoji",
+            "😀",
+            "--folder",
+            folder_name,
+            "--filename-prefix",
+            filename_prefix,
+            "--quiet",
+        )
+
+        assert result.returncode == 0
+        assert result.stderr == ""
+        assert_valid_icon_set(EMOJIS_ROOT / folder_name, filename_prefix=filename_prefix)
+        assert not (EMOJIS_ROOT / folder_name / "emoji_16x16.png").exists()
+    finally:
+        cleanup_codex_artifacts(folder_name)
+
+
+def test_cli_generates_valid_png_icon_sets_with_folder_filename_prefix():
+    folder_base = "codex_folder_prefix"
+    output_folders = (f"{folder_base}_fire", f"{folder_base}_target")
+    cleanup_codex_artifacts(*output_folders)
+
+    try:
+        result = run_cli(
+            "--batch",
+            "🔥:fire,🎯:target",
+            "--folder",
+            folder_base,
+            "--filename-prefix-from-folder",
+            "--quiet",
+        )
+
+        assert result.returncode == 0
+        assert result.stderr == ""
+        for output_folder in output_folders:
+            assert_valid_icon_set(EMOJIS_ROOT / output_folder, filename_prefix=output_folder)
+            assert not (EMOJIS_ROOT / output_folder / "emoji_16x16.png").exists()
     finally:
         cleanup_codex_artifacts(*output_folders)

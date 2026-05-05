@@ -51,6 +51,50 @@ emojis/browser_icons_idea/emoji_*.png
 
 If `--emoji` and `--batch` are both provided, `--batch` takes priority and `--emoji` is ignored with a warning.
 
+## Output Filename Prefix
+
+The default filename prefix is `emoji`.
+
+```powershell
+python unicode_to_png.py --emoji "🎯" --folder target_icon
+```
+
+Output:
+
+```text
+emojis/target_icon/emoji_16x16.png
+emojis/target_icon/emoji_128x128.png
+```
+
+Use `--filename-prefix` for a custom prefix:
+
+```powershell
+python unicode_to_png.py --emoji "🎯" --folder target_icon --filename-prefix chrome_icon
+```
+
+Output:
+
+```text
+emojis/target_icon/chrome_icon_16x16.png
+emojis/target_icon/chrome_icon_128x128.png
+```
+
+Use `--filename-prefix-from-folder` to derive the filename prefix from the sanitized output folder name:
+
+```powershell
+python unicode_to_png.py --batch "🔥:fire,🎮:game" --folder browser_icons --filename-prefix-from-folder
+```
+
+Output:
+
+```text
+emojis/browser_icons_fire/browser_icons_fire_16x16.png
+emojis/browser_icons_game/browser_icons_game_16x16.png
+```
+
+`--filename-prefix` and `--filename-prefix-from-folder` are mutually exclusive.
+If the custom prefix is empty after sanitization, the CLI exits with an objective error.
+
 ## Automation
 
 Use `--quiet` to suppress console output during automated runs:

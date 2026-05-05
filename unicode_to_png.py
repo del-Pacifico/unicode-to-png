@@ -95,6 +95,7 @@ Usage rules:
   - Provide either --emoji or --batch.
   - Provide --folder for every generation run.
   - When --emoji and --batch are both provided, --batch is used and --emoji is ignored.
+  - Use --filename-prefix or --filename-prefix-from-folder to customize output file names.
   - The CLI never asks for keyboard input. Missing required values return an error.
   - Windows is required for supported color emoji rendering.
 
@@ -103,13 +104,13 @@ Examples:
     python unicode_to_png.py --emoji "<emoji>" --folder target_icon
 
   Medium:
-    python unicode_to_png.py --batch "<emoji>:fire,<emoji>:game" --folder browser_icons
+    python unicode_to_png.py --batch "<emoji>:fire,<emoji>:game" --folder browser_icons --filename-prefix-from-folder
 
   Advanced:
-    python unicode_to_png.py --batch "<emoji>:developer,<emoji>:firefighter" --folder heroes --quiet --autofixmargin
+    python unicode_to_png.py --batch "<emoji>:developer,<emoji>:firefighter" --folder heroes --filename-prefix hero --quiet --autofixmargin
 
 Output:
-  - PNG icons are written to emojis/<folder>/emoji_<size>x<size>.png.
+  - PNG icons are written to emojis/<folder>/<prefix>_<size>x<size>.png.
   - Runtime logs are written to log/YYYYMMDD_<folder>.log when warnings, errors, or operational events are recorded.
 
 More examples:
@@ -137,6 +138,16 @@ Automation with quiet console:
 Manual margin control:
   python unicode_to_png.py --emoji "<emoji>" --folder centered_icon --margin 0.2
   Use this when a fixed visual margin is required.
+
+Custom filename prefix:
+  python unicode_to_png.py --emoji "<emoji>" --folder gaming_icon --filename-prefix chrome_icon
+  Output: emojis/gaming_icon/chrome_icon_16x16.png ... chrome_icon_128x128.png
+
+Folder-based filename prefix:
+  python unicode_to_png.py --batch "<emoji>:fire,<emoji>:game" --folder browser_icons --filename-prefix-from-folder
+  Output:
+    emojis/browser_icons_fire/browser_icons_fire_*.png
+    emojis/browser_icons_game/browser_icons_game_*.png
 
 Automatic edge correction:
   python unicode_to_png.py --emoji "<emoji>" --folder astronaut --autofixmargin
@@ -180,6 +191,8 @@ def parse_args():
     parser.add_argument("--margin", type=float, help="Extra margin ratio (0.0 - 1.0) to prevent emoji clipping (default: 0.25)", required=False)
     parser.add_argument("--edgecheck", action="store_true", help="Enable visual edge test to detect emoji touching final image borders.")
     parser.add_argument("--autofixmargin", action="store_true", help="Enable edge check and re-render with increased margin if the emoji touches an edge.")
+    parser.add_argument("--filename-prefix", type=str, help="Custom output filename prefix. Default: emoji.", required=False)
+    parser.add_argument("--filename-prefix-from-folder", action="store_true", help="Use the sanitized output folder name as the output filename prefix.")
     parser.add_argument("--examples", action="store_true", help="Show detailed CLI examples and exit.")
     parser.add_argument("--version", action="version", version=f"unicode_to_png {read_version()}")
     return parser.parse_args()
@@ -342,6 +355,19 @@ def main():
     if folder_base != folder_raw:
         startup_warnings.append(f"Output folder name was sanitized from '{folder_raw}' to '{folder_base}'.")
 
+    if args.filename_prefix and args.filename_prefix_from_folder:
+        safe_print(console_message("ERROR", "Use either --filename-prefix or --filename-prefix-from-folder, not both."))
+        sys.exit(1)
+
+    filename_prefix = "emoji"
+    if args.filename_prefix:
+        filename_prefix = sanitize_folder_name(args.filename_prefix.strip())
+        if not filename_prefix:
+            safe_print(console_message("ERROR", f"Filename prefix '{args.filename_prefix}' is empty after sanitization."))
+            sys.exit(1)
+        if filename_prefix != args.filename_prefix.strip():
+            startup_warnings.append(f"Filename prefix was sanitized from '{args.filename_prefix}' to '{filename_prefix}'.")
+
     base_path = os.path.dirname(os.path.abspath(__file__))
     emojis_root = os.path.join(base_path, "emojis")
     try:
@@ -355,6 +381,7 @@ def main():
     for index, (emoji, alias) in enumerate(emoji_pairs, start=1):
         # Generate folder name based on CLI --folder when not in batch mode.
         subfolder_name = f"{folder_base}" if alias == "single" else f"{folder_base}_{alias}"
+        active_filename_prefix = subfolder_name if args.filename_prefix_from_folder else filename_prefix
         output_path = os.path.join(emojis_root, subfolder_name)
         try:
             os.makedirs(output_path, exist_ok=True)
@@ -375,6 +402,7 @@ def main():
             log(warning, log_entries, quiet=quiet_mode, level="WARNING")
 
         log(f"Starting PNG generation for emoji {index} into '{output_path}'.", log_entries, quiet=quiet_mode)
+        log(f"Output filename prefix applied: {active_filename_prefix}.", log_entries, quiet=quiet_mode, level="DEBUG")
         log(f"Margin ratio applied: {margin_ratio}.", log_entries, quiet=quiet_mode, level="DEBUG")
 
         ICON_SIZES = [16, 19, 32, 38, 48, 128]
@@ -488,7 +516,7 @@ def main():
 
 
 
-            filename = f"emoji_{size}x{size}.png"
+            filename = f"{active_filename_prefix}_{size}x{size}.png"
             file_path = os.path.join(output_path, filename)
 
             # Enforce memory usage limit when optional monitoring is available.

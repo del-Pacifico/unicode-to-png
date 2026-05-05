@@ -42,6 +42,19 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 
 ---
 
+## 🆕 What’s New
+
+- CLI execution is fully parameter-driven; the script no longer reads missing values from keyboard prompts.
+- `--help` now includes usage rules, examples, output structure, and operational notes.
+- `--examples` provides detailed command examples without rendering or checking runtime dependencies.
+- `docs/USAGE.md` documents required arguments, batch mode, output naming, margin controls, automation, and common errors.
+- Output filenames can keep the default `emoji_` prefix, use a custom prefix, or derive the prefix from the output folder.
+- Runtime dependency validation, filesystem handling, and log persistence now fail with clearer messages.
+- Unit, CLI, and PNG integration tests now run locally and through Windows CI.
+- Project metadata, development dependencies, and repository links are aligned with the current GitHub repository.
+
+---
+
 ## ✨ Features
 
 - 🖼️ **High-Quality Icon Generation**  
@@ -65,6 +78,9 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 - 🗂️ **Structured Output**  
   Icons are saved inside: `emojis/<folder_base>_<alias>/`  
   Logs (if any) stored in: `log/YYYYMMDD_<folder>.log`
+
+- 🏷️ **Configurable Filename Prefix**
+  Output PNG files use the default `emoji_` prefix unless `--filename-prefix` or `--filename-prefix-from-folder` is provided.
 
 - 🔇 **Silent Mode**  
   Use `--quiet` for fully silent operation—ideal for automation or scripting.
@@ -125,26 +141,41 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
 
 ---
 
-### 🖼️ Visual Preview
+### 🖼️ Output Preview
 
-Below are examples of how the script operates and what kind of output it produces:
+The CLI exposes usage help and examples directly from the terminal:
 
-#### 🧪 CLI Usage Demo
+```bash
+python unicode_to_png.py --help
+python unicode_to_png.py --examples
+```
 
-![CLI Demo](assets/cli_demo01.png)
-![CLI Demo](assets/cli_demo02.png)
+Generated files follow a predictable structure:
 
-#### 📁 Folder Output Overview
+```text
+project_root/
+ ├── emojis/
+ │    ├── <folder_base>_<alias>/
+ │    │     ├── emoji_16x16.png
+ │    │     ├── emoji_19x19.png
+ │    │     ├── emoji_32x32.png
+ │    │     ├── emoji_38x38.png
+ │    │     ├── emoji_48x48.png
+ │    │     └── emoji_128x128.png
+ └── log/
+      └── YYYYMMDD_<folder>.log
+```
 
-This image shows how emoji icon sets are stored after generation.
+Generated sizes:
 
-![Output Preview](assets/output_preview.png)
-
-#### 🔍 All Sizes Generated (Example: 🤝 Handshake Emoji)
-
-A detailed view of the PNG files produced in various sizes from a single emoji.
-
-![Emoji Sizes Detail](assets/emoji_sizes_detail.png)
+| Size | Filename pattern |
+|------|------------------|
+| 16x16 | `<prefix>_16x16.png` |
+| 19x19 | `<prefix>_19x19.png` |
+| 32x32 | `<prefix>_32x32.png` |
+| 38x38 | `<prefix>_38x38.png` |
+| 48x48 | `<prefix>_48x48.png` |
+| 128x128 | `<prefix>_128x128.png` |
 
 ---
 
@@ -264,6 +295,8 @@ Generation commands require `--folder` and either `--emoji` or `--batch`. Inform
 | `--margin`        | float    | No       | Adds manual margin (e.g., `0.25` = 25%) around emoji.                      |
 | `--edgecheck`     | flag     | No       | Detects if rendered pixels touch the right or bottom edge.                 |
 | `--autofixmargin` | flag     | No       | Enables edge detection and retries with increased margin if needed.        |
+| `--filename-prefix` | string | No       | Uses a custom output filename prefix. Default: `emoji`.                    |
+| `--filename-prefix-from-folder` | flag | No | Uses the sanitized output folder name as the filename prefix.              |
 | `--examples`      | flag     | No       | Prints detailed CLI examples and exits without rendering.                  |
 | `--version`       | flag     | No       | Prints the CLI version read from the root `VERSION` file.                  |
 
@@ -277,6 +310,8 @@ Generation commands require `--folder` and either `--emoji` or `--batch`. Inform
 - **Aliases in `--batch`** are required for meaningful folder naming (e.g., `🎮:game`).
 - **`--folder`** is appended to each alias to generate subfolder names.
 - **Detailed examples** are available with `python unicode_to_png.py --examples`.
+- **Filename prefix** defaults to `emoji`; use `--filename-prefix` for a custom prefix or `--filename-prefix-from-folder` to reuse the sanitized output folder name.
+- **Prefix options** are mutually exclusive; do not use `--filename-prefix` and `--filename-prefix-from-folder` together.
 - **Margins**:
   - `--margin` is manually specified.
   - `--edgecheck` only reports visual edge contact.

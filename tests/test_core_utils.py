@@ -1,3 +1,12 @@
+#
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+#
+# Original Author: Sergio Palma Hidalgo
+# Project URL: https://github.com/del-Pacifico/unicode-to-png
+# Copyright (c) 2025 Sergio Palma Hidalgo
+# All rights reserved.
+#
 from unicode_to_png.logging_utils import console_message
 from unicode_to_png.logging_utils import write_log_if_needed
 from unicode_to_png.path_utils import prepare_log_path, sanitize_folder_name

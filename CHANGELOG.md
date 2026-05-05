@@ -18,6 +18,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added `pyproject.toml` with package metadata, runtime dependencies, optional development dependencies, and pytest configuration.
 - Added a Windows GitHub Actions workflow for dependency installation, compilation, pytest, and CLI smoke checks.
 - Added robust CLI help, detailed `--examples` output, and `docs/USAGE.md` for extended usage guidance.
+- Added configurable output filename prefixes through `--filename-prefix` and `--filename-prefix-from-folder`.
 
 ### Changed
 
@@ -29,6 +30,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Console and file logs now use objective English messages with explicit severity levels.
 - Successful conversion runs now flush collected log entries to the configured log file.
 - Filesystem and log persistence failures are now handled with explicit warnings while preserving batch continuity when possible.
+- README image previews were replaced with Markdown examples to reduce stale visual documentation.
+- New Python modules and tests now include the project MPL source header.
 - README release badge now uses the GitHub latest release badge instead of a hardcoded version value.
 - Repository links were normalized to `https://github.com/del-Pacifico/unicode-to-png`.
 - GitHub issue templates were aligned with the current dependency and logging standards.
