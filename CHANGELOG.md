@@ -15,6 +15,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added baseline CLI subprocess tests for `--help`, `--version`, invalid emoji input, and empty batch input.
 - Added `requirements-dev.txt` for development-only test dependencies.
 - Added `pyproject.toml` with package metadata, runtime dependencies, optional development dependencies, and pytest configuration.
+- Added a Windows GitHub Actions workflow for dependency installation, compilation, pytest, and CLI smoke checks.
 
 ### Changed
 
