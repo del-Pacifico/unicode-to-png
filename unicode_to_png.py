@@ -39,7 +39,6 @@ from unicode_to_png import (
     parse_batch,
     prepare_log_path,
     read_version,
-    safe_input,
     safe_print,
     sanitize_folder_name,
     write_log_if_needed,
@@ -213,14 +212,18 @@ def main():
                 safe_print(console_message("WARNING", warning))
                 safe_print(console_message("INFO", "Install psutil to enable --memlimit: pip install psutil"))
 
-    # Determine emoji + alias pairs from --batch, --emoji, or interactive
+    # Determine emoji + alias pairs from explicit CLI arguments only.
     if args.batch:
         if args.emoji:
             startup_warnings.append("--emoji was ignored because --batch was provided.")
         emoji_pairs, batch_warnings = parse_batch(args.batch)
         startup_warnings.extend(batch_warnings)
     else:
-        emoji_input = args.emoji.strip() if args.emoji else safe_input("Enter the emoji symbol: ").strip()
+        if not args.emoji:
+            safe_print(console_message("ERROR", "No emoji input was provided. Use --emoji or --batch."))
+            sys.exit(1)
+
+        emoji_input = args.emoji.strip()
 
         # Validate that the input is a printable emoji character.
         if not emoji_input or not emoji_input.isprintable() or not is_emoji(emoji_input):
@@ -233,11 +236,12 @@ def main():
         safe_print(console_message("ERROR", "No valid emoji entries were provided."))
         sys.exit(1)
 
-    # Get folder name from CLI or prompt
-    if args.folder:
-        folder_raw = args.folder.strip()
-    else:
-        folder_raw = safe_input("Folder name to save icons (e.g. emoji_spy_glass): ").strip()
+    # Get folder name from explicit CLI arguments only.
+    if not args.folder:
+        safe_print(console_message("ERROR", "No output folder name was provided. Use --folder."))
+        sys.exit(1)
+
+    folder_raw = args.folder.strip()
 
     if not folder_raw:
         safe_print(console_message("ERROR", "No output folder name was provided."))

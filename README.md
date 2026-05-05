@@ -58,9 +58,9 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 - ⚙️ **Automatic Margin Compensation**  
   Smart margin rendering ensures that emojis aren’t cropped at the top or right. Optional `--margin` controls padding manually, while `--autofixmargin` enables edge detection and retries with increased margin when needed.
 
-- 🧪 **Dual Input Mode**  
+- 🧪 **Explicit CLI Input Mode**
   - CLI: `--emoji`, `--batch` for scripting or CI/CD.
-  - Interactive prompt fallback when no args are passed.
+  - No interactive keyboard prompts are used; required inputs must be provided through arguments.
 
 - 🗂️ **Structured Output**  
   Icons are saved inside: `emojis/<folder_base>_<alias>/`  
@@ -92,7 +92,8 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
 
 1. 🧾 **Input Handling**  
    - Accepts `--emoji` (single) or `--batch` (multiple emoji:alias pairs).  
-   - If no arguments are passed, the script runs in interactive mode prompting the user.
+   - Requires `--folder` for all generation runs.
+   - If required arguments are missing, the script exits with an objective error message.
 
 2. 🧼 **Sanitization & Validation**  
    - All folder names and aliases are cleaned to remove unsafe characters.  
@@ -153,12 +154,12 @@ Below are complete command-line examples for generating emoji-based icons for br
 
 ---
 
-#### 🔹 Single Emoji (Interactive Folder Prompt)
+#### 🔹 Single Emoji
 
-Generates all standard icon sizes (16px to 128px) for a single emoji. The script will prompt for the output folder name if `--folder` is not provided.
+Generates all standard icon sizes (16px to 128px) for a single emoji.
 
 ```bash
-python unicode_to_png.py --emoji "🧠"
+python unicode_to_png.py --emoji "🧠" --folder emoji
 ```
 
 - Output: `emojis/emoji/emoji_16x16.png`, ..., `emoji_128x128.png`
@@ -429,7 +430,7 @@ project_root/
 ### 🧪 CLI Structure
 
 - Built with `argparse`.
-- All options are optional, with fallbacks to interactive mode.
+- Generation requires explicit `--emoji` or `--batch`, plus `--folder`.
 - Batch execution via `--batch` supports `emoji:alias` pairs.
 - Flag `--quiet` disables all stdout output, ideal for silent automation.
 - Flag `--version` reads the release number from the root `VERSION` file.
@@ -490,7 +491,7 @@ These practices ensure the script is safe for automation pipelines, resource-con
 
 1. Open your terminal or command prompt.
 2. Navigate to the folder where `unicode_to_png.py` is located.
-3. Run: `python unicode_to_png.py --emoji "🎮"`
+3. Run: `python unicode_to_png.py --emoji "🎮" --folder gaming`
 
 ### 💻 For Advanced Users
 

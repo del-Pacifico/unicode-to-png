@@ -23,6 +23,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - CLI now reads the banner version from `VERSION`.
 - `--autofixmargin` now enables edge checking automatically.
 - Pillow is now validated at runtime without attempting automatic installation.
+- CLI generation now requires explicit arguments and no longer reads missing values from keyboard prompts.
 - Console output is now tolerant of legacy Windows encodings.
 - Console and file logs now use objective English messages with explicit severity levels.
 - Successful conversion runs now flush collected log entries to the configured log file.

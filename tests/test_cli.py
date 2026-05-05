@@ -75,6 +75,24 @@ def test_cli_invalid_emoji_exits_with_objective_error_message():
     assert result.stderr == ""
 
 
+def test_cli_without_input_arguments_exits_without_interactive_prompt():
+    result = run_cli("--quiet")
+
+    assert result.returncode == 1
+    assert "[utp] - ERROR - No emoji input was provided. Use --emoji or --batch." in result.stdout
+    assert "Enter the emoji symbol:" not in result.stdout
+    assert result.stderr == ""
+
+
+def test_cli_without_folder_argument_exits_without_interactive_prompt():
+    result = run_cli("--emoji", "😀", "--quiet")
+
+    assert result.returncode == 1
+    assert "[utp] - ERROR - No output folder name was provided. Use --folder." in result.stdout
+    assert "Folder name to save icons" not in result.stdout
+    assert result.stderr == ""
+
+
 def test_cli_batch_without_valid_entries_exits_before_rendering():
     result = run_cli("--batch", ",", "--folder", "cli_empty_batch", "--quiet")
 
@@ -98,7 +116,7 @@ def test_cli_generates_valid_png_icon_set_for_single_emoji():
         cleanup_codex_artifacts(folder_name)
 
 
-def test_cli_generates_valid_png_icon_sets_for_batch_input():
+def test_cli_generates_valid_png_icon_sets_for_batch_argument():
     folder_base = "codex_integration_batch"
     output_folders = (f"{folder_base}_fire", f"{folder_base}_target")
     cleanup_codex_artifacts(*output_folders)

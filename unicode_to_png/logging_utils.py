@@ -25,11 +25,6 @@ def safe_print(message="", **kwargs):
         print(safe_message, **kwargs)
 
 
-def safe_input(prompt):
-    safe_print(prompt, end="")
-    return input()
-
-
 def console_message(level, message):
     """Build a consistent console message."""
     return f"[utp] - {level.upper()} - {message}"
