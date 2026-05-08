@@ -1,0 +1,44 @@
+name: Documentation
+description: Report missing, incorrect, outdated, or unclear documentation.
+title: "[Docs]: "
+labels:
+  - "type: documentation"
+  - "scope: documentation"
+  - "needs: triage"
+body:
+  - type: dropdown
+    id: doc-area
+    attributes:
+      label: Documentation area
+      options:
+        - README.md
+        - docs/USAGE.md
+        - CHANGELOG.md
+        - CONTRIBUTING.md
+        - SECURITY.md
+        - .github templates
+        - CLI help or examples
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue
+      description: Describe what is missing, unclear, incorrect, or stale.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-update
+    attributes:
+      label: Proposed update
+      description: Suggest the wording, section, command example, or correction.
+    validations:
+      required: false
+  - type: textarea
+    id: links
+    attributes:
+      label: Links or references
+      description: Link to the affected lines, docs, issue, PR, or release note.
+    validations:
+      required: false
