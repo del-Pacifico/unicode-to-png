@@ -7,7 +7,7 @@ Please update to the most recent release before reporting security issues.
 
 | Version | Supported |
 |---------|-----------|
-| 1.19    | ✅         |
+| 1.19.2  | ✅         |
 
 ---
 

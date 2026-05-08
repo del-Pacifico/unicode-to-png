@@ -1,43 +1,57 @@
 # 🖼️ unicode_to_png
 
-![Version](https://img.shields.io/badge/version-1.19-blue?style=flat-square)
+![Latest Release](https://img.shields.io/github/v/release/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-orange?style=flat-square)
-![Python](https://img.shields.io/badge/python-3.11%2B-yellow?style=flat-square)
+![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
 ![Pillow](https://img.shields.io/badge/pillow-9.0%2B-brightgreen?style=flat-square)
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
+![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
 
 ---
 
 ## 📖 Table of Contents
 
-- [Description](#description)
-- [Features](#features)
-- [How It Works](#how-it-works)
-- [Options Available](#options-available)
-- [Recommended Configurations/Use](#recommended-configurationsuse)
-- [Technical Design](#technical-design)
-- [Installation](#installation)
-- [Privacy](#privacy)
-- [License](#license)
-- [Changelog](#changelog)
-- [Use Cases](#use-cases)
-- [Edge Cases & Warnings](#edge-cases--warnings)
-- [Support the Project](#support-the-project)
-- [Contributions](#contributions)
-- [Governance & Ethics](#governance--ethics)
+- 📌 [Description](#-description)
+- ✨ [Features](#-features)
+- ⚙️ [How It Works](#️-how-it-works)
+- 🛠️ [Options Available](#️-options-available)
+- 💡 [Recommended Configurations/Use](#-recommended-configurationsuse)
+- 🧱 [Technical Design](#-technical-design)
+- 📦 [Installation](#-installation)
+- 🔒 [Privacy](#-privacy)
+- 📄 [License](#-license)
+- 🧾 [Changelog](#-changelog)
+- 💡 [Use Cases](#-use-cases)
+- ⚠️ [Edge Cases & Warnings](#️-edge-cases--warnings)
+- 💖 [Support the Project](#-support-the-project)
+- 🤝 [Contributions](#-contributions)
+- 📚 [Governance & Ethics](#-governance--ethics)
 
 ---
 
 ## 📌 Description
 
-**Unicode to PNG v1.19** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
+**Unicode to PNG** is a professional-grade emoji rendering engine tailored for browser extension developers, UI/UX designers, and automation engineers.
 
 This script transforms any Unicode emoji—including single glyphs, composite sequences, skin tone modifiers, and complex ZWJ compositions—into high-resolution `.png` icons optimized for browser use (e.g., Chrome, Firefox, Edge).
 
 With robust emoji parsing, strict validation, and automatic rendering margin adjustments, this tool guarantees visual consistency across all icon sizes.
 
 🧩 Built for Windows, but script-aware of cross-platform limitations.
+
+---
+
+## 🆕 What’s New
+
+- CLI execution is fully parameter-driven; the script no longer reads missing values from keyboard prompts.
+- `--help` now includes usage rules, examples, output structure, and operational notes.
+- `--examples` provides detailed command examples without rendering or checking runtime dependencies.
+- `docs/USAGE.md` documents required arguments, batch mode, output naming, margin controls, automation, and common errors.
+- Output filenames can keep the default `emoji_` prefix, use a custom prefix, or derive the prefix from the output folder.
+- Runtime dependency validation, filesystem handling, and log persistence now fail with clearer messages.
+- Unit, CLI, and PNG integration tests now run locally and through Windows CI.
+- Project metadata, development dependencies, and repository links are aligned with the current GitHub repository.
 
 ---
 
@@ -55,15 +69,18 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   - Flag/tags (e.g., 🇨🇱, 🏴)
 
 - ⚙️ **Automatic Margin Compensation**  
-  Smart margin rendering ensures that emojis aren’t cropped at the top or right. Optional `--margin` or `--autofixmargin` lets the engine adjust bounding boxes on-demand.
+  Smart margin rendering ensures that emojis aren’t cropped at the top or right. Optional `--margin` controls padding manually, while `--autofixmargin` enables edge detection and retries with increased margin when needed.
 
-- 🧪 **Dual Input Mode**  
+- 🧪 **Explicit CLI Input Mode**
   - CLI: `--emoji`, `--batch` for scripting or CI/CD.
-  - Interactive prompt fallback when no args are passed.
+  - No interactive keyboard prompts are used; required inputs must be provided through arguments.
 
 - 🗂️ **Structured Output**  
   Icons are saved inside: `emojis/<folder_base>_<alias>/`  
   Logs (if any) stored in: `log/YYYYMMDD_<folder>.log`
+
+- 🏷️ **Configurable Filename Prefix**
+  Output PNG files use the default `emoji_` prefix unless `--filename-prefix` or `--filename-prefix-from-folder` is provided.
 
 - 🔇 **Silent Mode**  
   Use `--quiet` for fully silent operation—ideal for automation or scripting.
@@ -72,7 +89,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   All folder and alias inputs are automatically cleaned to avoid invalid filesystem characters.
 
 - 🔍 **Safe Logging System**  
-  Warnings, overwrites, and unexpected events are logged with timestamps. No noise unless necessary.
+  Warnings, overwrites, and unexpected events are logged with timestamps and severity levels. Console logs use `[utp] - LEVEL - message`; file logs use `[YYYY-MM-DD HH:MM:SS] [LEVEL] message`.
 
 - 🖥️ **Optimized for Windows**  
   Leverages `Segoe UI Emoji` for rich colored rendering on Windows 10/11. Falls back gracefully if missing.
@@ -80,6 +97,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 - ✅ **Minimal Requirements**  
   - Python ≥ 3.6  
   - Pillow ≥ 9.0  
+  - psutil optional, only for `--memlimit`  
   - No external API or web access needed
 
 ---
@@ -90,7 +108,8 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
 
 1. 🧾 **Input Handling**  
    - Accepts `--emoji` (single) or `--batch` (multiple emoji:alias pairs).  
-   - If no arguments are passed, the script runs in interactive mode prompting the user.
+   - Requires `--folder` for all generation runs.
+   - If required arguments are missing, the script exits with an objective error message.
 
 2. 🧼 **Sanitization & Validation**  
    - All folder names and aliases are cleaned to remove unsafe characters.  
@@ -103,7 +122,7 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
    - Bounding box (`textbbox`) is calculated to center the emoji precisely.
 
 4. 🧠 **Smart Margin Correction (Optional)**  
-   - If `--autofixmargin` is used, the system detects visual cropping (top/right clipping) and reapplies the render with a padded margin.  
+   - If `--autofixmargin` is used, the system enables visual edge detection and reapplies the render with increased margin when clipping is detected.  
    - Ensures clean and professional-looking results at all sizes.
 
 5. 🖼️ **Icon Downsampling**  
@@ -115,33 +134,48 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
    - If any warnings, errors, or overwrites occur, they are logged into `log/YYYYMMDD_<base>_<alias>.log`
 
 7. 📡 **Silent Automation Support**  
-   - Use `--quiet` to suppress output in automation pipelines while preserving log creation.
+   - Use `--quiet` to suppress console output in automation pipelines while preserving log creation.
 
 8. 🧩 **Composite Emoji Handling**  
    - ZWJ sequences (👨‍👩‍👧‍👦), skin tones, gender variations, and presentation modifiers are rendered correctly and preserved during export.
 
 ---
 
-### 🖼️ Visual Preview
+### 🖼️ Output Preview
 
-Below are examples of how the script operates and what kind of output it produces:
+The CLI exposes usage help and examples directly from the terminal:
 
-#### 🧪 CLI Usage Demo
+```bash
+python unicode_to_png.py --help
+python unicode_to_png.py --examples
+```
 
-![CLI Demo](assets/cli_demo01.png)
-![CLI Demo](assets/cli_demo02.png)
+Generated files follow a predictable structure:
 
-#### 📁 Folder Output Overview
+```text
+project_root/
+ ├── emojis/
+ │    ├── <folder_base>_<alias>/
+ │    │     ├── emoji_16x16.png
+ │    │     ├── emoji_19x19.png
+ │    │     ├── emoji_32x32.png
+ │    │     ├── emoji_38x38.png
+ │    │     ├── emoji_48x48.png
+ │    │     └── emoji_128x128.png
+ └── log/
+      └── YYYYMMDD_<folder>.log
+```
 
-This image shows how emoji icon sets are stored after generation.
+Generated sizes:
 
-![Output Preview](assets/output_preview.png)
-
-#### 🔍 All Sizes Generated (Example: 🤝 Handshake Emoji)
-
-A detailed view of the PNG files produced in various sizes from a single emoji.
-
-![Emoji Sizes Detail](assets/emoji_sizes_detail.png)
+| Size | Filename pattern |
+|------|------------------|
+| 16x16 | `<prefix>_16x16.png` |
+| 19x19 | `<prefix>_19x19.png` |
+| 32x32 | `<prefix>_32x32.png` |
+| 38x38 | `<prefix>_38x38.png` |
+| 48x48 | `<prefix>_48x48.png` |
+| 128x128 | `<prefix>_128x128.png` |
 
 ---
 
@@ -151,12 +185,12 @@ Below are complete command-line examples for generating emoji-based icons for br
 
 ---
 
-#### 🔹 Single Emoji (Interactive Folder Prompt)
+#### 🔹 Single Emoji
 
-Generates all standard icon sizes (16px to 128px) for a single emoji. The script will prompt for the output folder name if `--folder` is not provided.
+Generates all standard icon sizes (16px to 128px) for a single emoji.
 
 ```bash
-python unicode_to_png.py --emoji "🧠"
+python unicode_to_png.py --emoji "🧠" --folder emoji
 ```
 
 - Output: `emojis/emoji/emoji_16x16.png`, ..., `emoji_128x128.png`
@@ -249,16 +283,24 @@ python unicode_to_png.py --batch "👩‍💻:developer,🧑‍🚒:firefighter"
 
 ## 🛠️ Options Available
 
-All command-line options are optional unless noted. They can be combined for powerful customization and automation.
+Generation commands require `--folder` and either `--emoji` or `--batch`. Informational commands such as `--help`, `--examples`, and `--version` exit without rendering.
 
 | Option            | Type     | Required | Description                                                                 |
 |-------------------|----------|----------|-----------------------------------------------------------------------------|
-| `--emoji`         | string   | No       | A single emoji to convert (e.g., `"🧠"`).                                   |
-| `--batch`         | string   | No       | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).      |
-| `--folder`        | string   | No       | Base name for output folder(s). Sanitized to avoid invalid characters.     |
+| `--emoji`         | string   | Yes*     | A single emoji to convert (e.g., `"🧠"`).                                  |
+| `--batch`         | string   | Yes*     | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).     |
+| `--folder`        | string   | Yes      | Base name for output folder(s). Sanitized to avoid invalid characters.     |
 | `--quiet`         | flag     | No       | Suppresses all console output. Logging still occurs if warnings/errors.    |
+| `--memlimit`      | integer  | No       | Aborts if process memory exceeds this MB value. Requires optional `psutil`. |
 | `--margin`        | float    | No       | Adds manual margin (e.g., `0.25` = 25%) around emoji.                      |
-| `--autofixmargin` | flag     | No       | Automatically detects and adjusts margins if visual cropping is detected.  |
+| `--edgecheck`     | flag     | No       | Detects if rendered pixels touch the right or bottom edge.                 |
+| `--autofixmargin` | flag     | No       | Enables edge detection and retries with increased margin if needed.        |
+| `--filename-prefix` | string | No       | Uses a custom output filename prefix. Default: `emoji`.                    |
+| `--filename-prefix-from-folder` | flag | No | Uses the sanitized output folder name as the filename prefix.              |
+| `--examples`      | flag     | No       | Prints detailed CLI examples and exits without rendering.                  |
+| `--version`       | flag     | No       | Prints the CLI version read from the root `VERSION` file.                  |
+
+`*` Use either `--emoji` or `--batch` for generation.
 
 ---
 
@@ -267,9 +309,13 @@ All command-line options are optional unless noted. They can be combined for pow
 - **`--emoji` vs `--batch`**: Only one of them should be used at a time.
 - **Aliases in `--batch`** are required for meaningful folder naming (e.g., `🎮:game`).
 - **`--folder`** is appended to each alias to generate subfolder names.
+- **Detailed examples** are available with `python unicode_to_png.py --examples`.
+- **Filename prefix** defaults to `emoji`; use `--filename-prefix` for a custom prefix or `--filename-prefix-from-folder` to reuse the sanitized output folder name.
+- **Prefix options** are mutually exclusive; do not use `--filename-prefix` and `--filename-prefix-from-folder` together.
 - **Margins**:
   - `--margin` is manually specified.
-  - `--autofixmargin` triggers a visual analysis during rendering and re-renders if necessary.
+  - `--edgecheck` only reports visual edge contact.
+  - `--autofixmargin` automatically enables edge checking and re-renders if necessary.
 
 ---
 
@@ -277,7 +323,7 @@ All command-line options are optional unless noted. They can be combined for pow
 
 - All folder and alias names are cleaned to use only letters, numbers, and underscores.
 - Emoji input must be printable Unicode.
-- If both `--margin` and `--autofixmargin` are used, `--autofixmargin` takes precedence.
+- If both `--margin` and `--autofixmargin` are used, the initial render uses the requested margin and the retry increases it only if edge contact is detected.
 - The script will halt gracefully with clear error messages if any invalid input is detected.
 
 ---
@@ -401,7 +447,7 @@ project_root/
 
 4. **Margin Adjustment**
    - If `--margin` is used: extra padding is manually added.
-   - If `--autofixmargin` is active: re-renders if edge pixels suggest clipping.
+   - If `--autofixmargin` is active: edge checking is enabled automatically and the image re-renders if edge pixels suggest clipping.
 
 5. **Downsampling**
    - Resizing from temporary canvas to final size uses `Image.LANCZOS` (high-quality).
@@ -423,9 +469,10 @@ project_root/
 ### 🧪 CLI Structure
 
 - Built with `argparse`.
-- All options are optional, with fallbacks to interactive mode.
+- Generation requires explicit `--emoji` or `--batch`, plus `--folder`.
 - Batch execution via `--batch` supports `emoji:alias` pairs.
 - Flag `--quiet` disables all stdout output, ideal for silent automation.
+- Flag `--version` reads the release number from the root `VERSION` file.
 
 ---
 
@@ -438,6 +485,7 @@ project_root/
 - **Folder/alias names**: sanitized to allow only `[a-zA-Z0-9_]`.
 - **Rendering safety**: verifies transparent image result and logs warnings.
 - **File overwrite detection**: notifies if `emoji_*.png` is being replaced.
+- **Filesystem resilience**: reports output and log persistence failures clearly, and skips only the affected batch item when continuation is possible.
 
 ---
 
@@ -445,12 +493,12 @@ project_root/
 
 Each functionality is clearly isolated for maintainability and testability:
 
-- `main()`: high-level orchestration.
-- `parse_args()`: CLI argument handling.
-- `parse_batch()`: emoji batch logic and alias assignment.
-- `log()` / `write_log_if_needed()`: consistent, timestamped logging.
-- `load_font()`: font loading abstraction with fallback logic.
-- `prepare_log_path()`: automatic log path management.
+- `unicode_to_png.py`: CLI orchestration and rendering workflow.
+- `unicode_to_png/version.py`: version file reading.
+- `unicode_to_png/batch_utils.py`: emoji batch parsing and alias assignment.
+- `unicode_to_png/path_utils.py`: folder sanitization and log path preparation.
+- `unicode_to_png/logging_utils.py`: console-safe output and structured logging.
+- `unicode_to_png/unicode_utils.py`: emoji validation, structure classification, margin calculation, and positioning helpers.
 
 ---
 
@@ -470,7 +518,7 @@ Unicode to PNG follows high technical standards to ensure reliability, performan
 - **Defensive Programming**  
   The tool is designed to continue functioning even in edge cases such as unsupported emojis, missing fonts, or invalid input. Errors are logged; failures are contained.
 
-asset practices ensure the script is safe for automation pipelines, resource-constrained systems, and batch processing.
+These practices ensure the script is safe for automation pipelines, resource-constrained systems, and batch processing.
 
 ---
 
@@ -482,7 +530,7 @@ asset practices ensure the script is safe for automation pipelines, resource-con
 
 1. Open your terminal or command prompt.
 2. Navigate to the folder where `unicode_to_png.py` is located.
-3. Run: `python unicode_to_png.py --emoji "🎮"`
+3. Run: `python unicode_to_png.py --emoji "🎮" --folder gaming`
 
 ### 💻 For Advanced Users
 
@@ -504,6 +552,41 @@ py -m venv env
 env\Scripts\activate
 pip install -r requirements.txt
 python unicode_to_png.py --batch "🔥:fire,🎮:game" --folder my_icons
+```
+
+#### Optional memory monitoring
+
+`--memlimit` requires `psutil`. Install it only if you need memory-based aborts:
+
+```bash
+pip install psutil
+```
+
+#### Development tests
+
+Install development dependencies and run the unit and CLI test suite:
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+The same development dependencies are also available through the optional package extra:
+
+```bash
+pip install -e .[dev]
+python -m pytest
+```
+
+The test suite includes CLI integration coverage for generated PNG dimensions, image format, and non-empty alpha content.
+The Windows CI workflow runs the same validation set on GitHub Actions for supported branches.
+
+#### Usage documentation
+
+Detailed usage guidance is available in [`docs/USAGE.md`](docs/USAGE.md). CLI examples are also available with:
+
+```bash
+python unicode_to_png.py --examples
 ```
 
 ---
@@ -662,7 +745,7 @@ While the script is robust and production-ready, the following edge cases and pl
 ### 🛑 Mixed Inputs (emoji + batch)
 
 - Do not use `--emoji` and `--batch` simultaneously.
-  - The script will prioritize `--batch` if both are present, but behavior is undefined.
+  - The script prioritizes `--batch` and reports a warning when both options are provided.
 - Stick to one mode per execution.
 
 ---
@@ -711,7 +794,7 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
 ### 🔧 How to Contribute
 
 1. **Fork the Repository**  
-   Navigate to [https://github.com/del-Pacifico/unicode_to_png](https://github.com/del-Pacifico/unicode_to_png) and click on "Fork".
+   Navigate to [https://github.com/del-Pacifico/unicode-to-png](https://github.com/del-Pacifico/unicode-to-png) and click on "Fork".
 
 2. **Create a New Branch**  
    Use a descriptive name for your branch (e.g., `feature/batch-validation`):
@@ -765,17 +848,16 @@ We’re happy to support contributors at all experience levels.
 
 ---
 
-![Made with ❤️ by del-Pacifico](https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20by%20del--Pacifico-orange?style=flat-square)
-![Star this project](https://img.shields.io/github/stars/del-Pacifico/unicode_to_png?style=flat-square&logo=github)
+![Maintained by del-Pacifico](https://img.shields.io/badge/Maintained%20by-del--Pacifico-orange?style=flat-square)
+![Star this project](https://img.shields.io/github/stars/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![Donate](https://img.shields.io/badge/Donate-via%20PayPal-blue?style=flat-square&logo=paypal)
 ![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen?style=flat-square)
 
 <!-- BADGE GROUP: QUALITY -->
-![No Tracking](https://img.shields.io/badge/Privacy-No%20tracking-blueviolet?style=flat-square&logo=shield)
 ![Lightweight](https://img.shields.io/badge/Built-lightweight-lightgrey?style=flat-square)
-![Modular Design](https://img.shields.io/badge/Architecture-Modular-informational?style=flat-square)
+![CLI Tool](https://img.shields.io/badge/Architecture-CLI%20tool-informational?style=flat-square)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=flat-square&logo=github)
 
-<!-- 👇 AI-related badges group -->
-![AI Assisted](https://img.shields.io/badge/AI-Generated_or_Assisted-blueviolet?style=flat-square&logo=openai)
-![GitHub Copilot](https://img.shields.io/badge/github_copilot-8957E5?style=for-the-badge&logo=github-copilot&logoColor=white)
+![Offline](https://img.shields.io/badge/Internet-None-lightgrey?style=flat-square)
+![No Data](https://img.shields.io/badge/Data-None-lightgrey?style=flat-square)
+![No Tracking](https://img.shields.io/badge/Tracking-None-lightgrey?style=flat-square)

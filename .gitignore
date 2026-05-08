@@ -2,9 +2,16 @@
 emojis/
 log/
 
+# Ignore Codex validation artifacts explicitly
+emojis/codex_*/
+log/*codex_*.log
+REPORTE_ANALISIS_REPO.md
+
 # Ignore Python cache files
 __pycache__/
 *.py[cod]
+.pytest_cache/
+*.egg-info/
 
 # Ignore virtual environments
 env/

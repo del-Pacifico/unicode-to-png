@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unicode-to-png"
+version = "1.19.2"
+description = "CLI tool that renders Unicode emoji into browser-ready PNG icon sets."
+readme = "README.md"
+requires-python = ">=3.6"
+license = { text = "MPL-2.0" }
+authors = [
+    { name = "Sergio Palma Hidalgo" }
+]
+keywords = ["unicode", "emoji", "png", "icons", "cli", "browser-extensions"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "Pillow>=9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+memory = [
+    "psutil",
+]
+
+[project.urls]
+Homepage = "https://github.com/del-Pacifico/unicode-to-png"
+Repository = "https://github.com/del-Pacifico/unicode-to-png"
+Issues = "https://github.com/del-Pacifico/unicode-to-png/issues"
+Changelog = "https://github.com/del-Pacifico/unicode-to-png/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["unicode_to_png"]
+py-modules = ["unicode_to_png"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"

@@ -5,6 +5,88 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- Added root `VERSION` file as the canonical project version source.
+- Added `--version` CLI flag.
+- Added baseline pytest coverage for version, sanitization, batch parsing, Unicode classification, margin calculation, and console message formatting.
+- Added baseline CLI subprocess tests for `--help`, `--version`, invalid emoji input, and empty batch input.
+- Added CLI integration tests that validate generated PNG icon sets for single emoji and batch input.
+- Added `requirements-dev.txt` for development-only test dependencies.
+- Added `pyproject.toml` with package metadata, runtime dependencies, optional development dependencies, and pytest configuration.
+- Added a Windows GitHub Actions workflow for dependency installation, compilation, pytest, and CLI smoke checks.
+- Added robust CLI help, detailed `--examples` output, and `docs/USAGE.md` for extended usage guidance.
+- Added configurable output filename prefixes through `--filename-prefix` and `--filename-prefix-from-folder`.
+
+### Changed
+
+- CLI now reads the banner version from `VERSION`.
+- `--autofixmargin` now enables edge checking automatically.
+- Pillow is now validated at runtime without attempting automatic installation.
+- CLI generation now requires explicit arguments and no longer reads missing values from keyboard prompts.
+- Console output is now tolerant of legacy Windows encodings.
+- Console and file logs now use objective English messages with explicit severity levels.
+- Successful conversion runs now flush collected log entries to the configured log file.
+- Filesystem and log persistence failures are now handled with explicit warnings while preserving batch continuity when possible.
+- README image previews were replaced with Markdown examples to reduce stale visual documentation.
+- New Python modules and tests now include the project MPL source header.
+- README release badge now uses the GitHub latest release badge instead of a hardcoded version value.
+- Repository links were normalized to `https://github.com/del-Pacifico/unicode-to-png`.
+- GitHub issue templates were aligned with the current dependency and logging standards.
+- Pure helper logic was extracted into the internal `unicode_to_png/` package while preserving `python unicode_to_png.py` CLI compatibility.
+
+---
+
+## [1.19.2] - 2025-09-23
+
+### 🔍 Review Summary
+
+Patch release focused on README navigation fixes, privacy badge refresh, and GitHub issue templates standardization.  
+No source code logic has been changed.
+
+---
+
+### ✨ Added
+
+- **.github/ISSUE_TEMPLATE/**
+  - `README.md`: Centralizes available templates (`bug_report.md`, `feature_request.md`, `hotfix.md`, `release_checklist.md`) and references `config.yml`.
+  - `hotfix.md`: YAML-based template for urgent and minimal production fixes.
+  - `release_checklist.md`: End-to-end checklist to plan and track releases.
+
+- **README.md**
+  - Added header badge: `Interface — CLI only`.
+  - Added footer quality badges: `Internet: None`, `Data: None`, `Tracking: None`.
+
+---
+
+### 📝 Changed
+
+- **README.md**
+  - Fixed all **Table of Contents** anchors to work across embedded GitHub contexts (Sponsors/Marketplace/mobile), aligning link targets with rendered IDs.
+  - Normalized repository links to the canonical slug `del-Pacifico/unicode-to-png` where applicable (e.g., “How to Contribute”).
+
+- **.github/ISSUE_TEMPLATE/config.yml**
+  - Updated `contact_links` to direct users to **Q&A** and **Ideas** categories, and added **Security Vulnerability Disclosure** via `security/policy`.
+  - Kept `blank_issues_enabled: false`.
+
+---
+
+### 🧹 Removed
+
+- **README.md**
+  - Removed AI-related footer badges (“AI-Generated_or_Assisted”, “GitHub Copilot”).
+  - Replaced the single privacy badge (“Privacy — No tracking”) with the three explicit status badges listed above.
+
+---
+
+### 🧾 Notes
+
+- No changes to emoji rendering logic, CLI behavior, or output files.
+
+---
+
 ## [1.19.1] - 2025-05-21
 
 ### 🔍 Review Summary
@@ -23,7 +105,7 @@ No source code logic has been changed.
 - **LICENSE**
   - 🔄 Updated repository reference to the correct GitHub organization:
     - From: `github.com/sergiopalmah/unicode_to_png`
-    - To: `github.com/del-Pacifico/unicode_to_png`
+    - To: `github.com/del-Pacifico/unicode-to-png`
 
 - **SECURITY.md**
   - 🔄 Bumped `Supported Version` table from `1.12` to `1.19` to match latest release.
