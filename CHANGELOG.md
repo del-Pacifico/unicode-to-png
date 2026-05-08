@@ -21,6 +21,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added configurable output filename prefixes through `--filename-prefix` and `--filename-prefix-from-folder`.
 - Added repository label taxonomy documentation in `.github/LABELS.md` and machine-readable label definitions in `.github/labels.yml`.
 - Added GitHub issue forms for bug reports, feature requests, documentation work, edge cases, investigations, and performance or stability concerns.
+- Added `scripts/sync_github_labels.py` to preview and synchronize GitHub labels from `.github/labels.yml`.
 
 ### Changed
 

@@ -14,6 +14,18 @@ Labels are grouped by family:
 
 `.github/labels.yml` is the technical source of truth. GitHub does not apply this file automatically; labels must be created or updated through the GitHub UI, GitHub CLI, API, or a sync script.
 
+## Synchronization
+
+Use the repository sync script to preview and apply label changes through GitHub CLI:
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python scripts/sync_github_labels.py --repo del-Pacifico/unicode-to-png
+python scripts/sync_github_labels.py --repo del-Pacifico/unicode-to-png --apply
+```
+
+The script runs in dry-run mode by default. Remote labels that are not defined in `.github/labels.yml` are reported and left unchanged unless `--delete-extra --apply` is used.
+
 | Name | Description | Color |
 |------|-------------|-------|
 | `behavior: non-breaking` | Changes that do not modify default behavior or break existing workflows. | `#20C997` |
