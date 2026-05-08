@@ -1,0 +1,44 @@
+name: Investigation
+description: Track technical research before classifying a bug, feature, or refactor.
+title: "[Investigation]: "
+labels:
+  - "type: investigation"
+  - "needs: triage"
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Investigation question
+      description: What needs to be understood?
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Primary scope
+      options:
+        - "scope: unicode"
+        - "scope: rendering"
+        - "scope: font-backend"
+        - "scope: packaging"
+        - "scope: dependencies"
+        - "scope: ci"
+        - "scope: tests"
+        - "scope: repo-maintenance"
+        - "scope: security"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Existing evidence
+      description: Summarize logs, test output, references, links, or prior decisions.
+    validations:
+      required: false
+  - type: textarea
+    id: desired-output
+    attributes:
+      label: Expected output
+      description: Describe the decision, report, prototype, or follow-up issue expected from this investigation.
+    validations:
+      required: true

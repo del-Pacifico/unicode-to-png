@@ -86,7 +86,7 @@ We support responsible and transparent use of AI to accelerate development, with
 
 ## 🧪 Reporting Bugs
 
-Please use the [Bug Report Template](.github/ISSUE_TEMPLATE/bug_report.md) once available.
+Please use the [Bug Report Form](.github/ISSUE_TEMPLATE/bug_report.yml) and include the exact command, reproduction steps, expected behavior, actual behavior, environment details, and relevant logs.
 
 ---
 
