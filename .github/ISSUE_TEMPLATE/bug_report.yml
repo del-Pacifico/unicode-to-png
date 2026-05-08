@@ -1,0 +1,123 @@
+name: Bug report
+description: Report a confirmed or suspected defect in Unicode to PNG.
+title: "[Bug]: "
+labels:
+  - "type: bug"
+  - "needs: triage"
+  - "priority: normal"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Provide enough detail for maintainers to reproduce and classify the issue.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the incorrect or unexpected behavior.
+      placeholder: The CLI exits unexpectedly when...
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: Paste the exact command you ran.
+      render: powershell
+      placeholder: python unicode_to_png.py --emoji "<emoji>" --folder target_icon
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide deterministic steps.
+      placeholder: |
+        1. Install dependencies with ...
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include console output when relevant.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Suspected scope
+      options:
+        - "scope: cli"
+        - "scope: rendering"
+        - "scope: unicode"
+        - "scope: font-backend"
+        - "scope: output-files"
+        - "scope: batch-processing"
+        - "scope: logging"
+        - "scope: filesystem"
+        - "scope: dependencies"
+        - "scope: ci"
+        - "scope: documentation"
+        - "scope: packaging"
+        - "scope: repo-maintenance"
+        - "scope: security"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 Pro 23H2
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: Python 3.13.12
+    validations:
+      required: true
+  - type: input
+    id: pillow
+    attributes:
+      label: Pillow version
+      placeholder: Pillow 12.1.1
+    validations:
+      required: false
+  - type: input
+    id: app-version
+    attributes:
+      label: Unicode to PNG version
+      placeholder: unicode_to_png 1.20.0
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or generated artifacts
+      description: Include relevant `[utp]` console messages or log file excerpts. Do not include secrets.
+      render: text
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Reporter checklist
+      options:
+        - label: I have searched existing issues and pull requests.
+          required: true
+        - label: I have included the exact command and output.
+          required: true
+        - label: I have removed sensitive data from logs and screenshots.
+          required: true

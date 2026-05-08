@@ -9,12 +9,12 @@ We welcome contributions that improve functionality, fix bugs, update documentat
 
 ### 1. Fork the Repository
 
-Click the **Fork** button at the top right of the [GitHub repo](https://github.com/sergiopalmah/unicode-to-png).
+Click the **Fork** button at the top right of the [GitHub repo](https://github.com/del-Pacifico/unicode-to-png).
 
 ### 2. Clone Your Fork
 
 ```bash
-git clone https://github.com/sergiopalmah/unicode-to-png.git
+git clone https://github.com/del-Pacifico/unicode-to-png.git
 cd unicode-to-png
 ```
 
@@ -86,13 +86,13 @@ We support responsible and transparent use of AI to accelerate development, with
 
 ## 🧪 Reporting Bugs
 
-Please use the [Bug Report Template](.github/ISSUE_TEMPLATE/bug_report.md) once available.
+Please use the [Bug Report Form](.github/ISSUE_TEMPLATE/bug_report.yml) and include the exact command, reproduction steps, expected behavior, actual behavior, environment details, and relevant logs.
 
 ---
 
 ## 🤝 Need Help?
 
-Open a [GitHub Issue](https://github.com/sergiopalmah/unicode-to-png/issues) or start a discussion.
+Open a [GitHub Issue](https://github.com/del-Pacifico/unicode-to-png/issues) or start a discussion.
 
 ---
 

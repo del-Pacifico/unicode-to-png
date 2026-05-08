@@ -1,0 +1,62 @@
+name: Edge case
+description: Report uncommon but valid behavior that should be handled more clearly.
+title: "[Edge Case]: "
+labels:
+  - "type: edge-case"
+  - "needs: triage"
+  - "priority: normal"
+body:
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scenario
+      description: Describe the uncommon input, environment, or sequence.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - "scope: unicode"
+        - "scope: rendering"
+        - "scope: font-backend"
+        - "scope: output-files"
+        - "scope: batch-processing"
+        - "scope: logging"
+        - "scope: filesystem"
+        - "scope: cli"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command or input
+      description: Include the exact command, emoji, batch string, folder, prefix, or environment.
+      render: powershell
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: What happened? Include warnings and logs if available.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should the CLI do in this edge case?
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Reporter checklist
+      options:
+        - label: The scenario uses valid or intentionally borderline input.
+          required: true
+        - label: This is not a duplicate of an existing bug report.
+          required: true
