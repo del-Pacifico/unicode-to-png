@@ -2,7 +2,7 @@
 name: "Release Checklist"
 about: "Plan and track a Unicode to PNG release end-to-end"
 title: "[RELEASE] v<x.y.z> — YYYY-MM-DD"
-labels: ["type: release", "needs: triage", "priority: normal"]
+labels: ["type: release", "scope: release", "needs: triage", "priority: normal"]
 assignees: []
 ---
 
@@ -51,7 +51,7 @@ Briefly describe the release goal(s), scope, and target date.
 - [ ] `README.md` updated for this release (usage, options, examples).  
 - [ ] Internal links and anchors verified (Table of Contents works).
 - [ ] Remove or update any outdated badges/sections (if applicable).
-- [ ] `.github/ISSUE_TEMPLATE/README.md` lists current templates (bug report, feature request, hotfix, release checklist) and `config.yml`.
+- [ ] `.github/ISSUE_TEMPLATE/README.md` lists current issue forms, maintenance templates, label conventions, and `config.yml`.
 - [ ] `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` validated (no stale references).
 
 ## Packaging & Distribution (if applicable)

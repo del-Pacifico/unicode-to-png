@@ -1,0 +1,92 @@
+name: Feature request
+description: Propose a new capability or enhancement for Unicode to PNG.
+title: "[Feature]: "
+labels:
+  - "type: feature"
+  - "needs: triage"
+  - "status: backlog"
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the requested feature in one or two paragraphs.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: Explain the workflow, limitation, or user need this feature addresses.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Include command examples, expected behavior, or output structure when relevant.
+      render: text
+      placeholder: python unicode_to_png.py --emoji "<emoji>" --folder target_icon --new-option value
+    validations:
+      required: false
+  - type: dropdown
+    id: behavior
+    attributes:
+      label: Behavior expectation
+      options:
+        - "behavior: opt-in"
+        - "behavior: non-breaking"
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Primary scope
+      options:
+        - "scope: cli"
+        - "scope: rendering"
+        - "scope: unicode"
+        - "scope: font-backend"
+        - "scope: output-files"
+        - "scope: batch-processing"
+        - "scope: logging"
+        - "scope: filesystem"
+        - "scope: tests"
+        - "scope: ci"
+        - "scope: documentation"
+        - "scope: packaging"
+        - "scope: dependencies"
+        - "scope: release"
+        - "scope: repo-maintenance"
+        - "scope: security"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any workaround, alternate design, or reason existing options are insufficient.
+    validations:
+      required: false
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List objective criteria that would make the feature complete.
+      placeholder: |
+        - The CLI accepts ...
+        - The generated output ...
+        - Tests cover ...
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Requester checklist
+      options:
+        - label: I have searched existing issues and pull requests.
+          required: true
+        - label: I have described the expected user-facing behavior.
+          required: true
+        - label: I have noted whether this should be opt-in or non-breaking.
+          required: true

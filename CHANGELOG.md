@@ -19,6 +19,9 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added a Windows GitHub Actions workflow for dependency installation, compilation, pytest, and CLI smoke checks.
 - Added robust CLI help, detailed `--examples` output, and `docs/USAGE.md` for extended usage guidance.
 - Added configurable output filename prefixes through `--filename-prefix` and `--filename-prefix-from-folder`.
+- Added repository label taxonomy documentation in `.github/LABELS.md` and machine-readable label definitions in `.github/labels.yml`.
+- Added GitHub issue forms for bug reports, feature requests, documentation work, edge cases, investigations, and performance or stability concerns.
+- Added `scripts/sync_github_labels.py` to preview and synchronize GitHub labels from `.github/labels.yml`.
 
 ### Changed
 
@@ -36,6 +39,8 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Repository links were normalized to `https://github.com/del-Pacifico/unicode-to-png`.
 - GitHub issue templates were aligned with the current dependency and logging standards.
 - Pure helper logic was extracted into the internal `unicode_to_png/` package while preserving `python unicode_to_png.py` CLI compatibility.
+- Pull request and issue template guidance now aligns with the repository label taxonomy and CLI validation workflow.
+- Release planning note: promote the accumulated short-term and medium-term changes to version `1.20.0` in the next release branch.
 
 ---
 

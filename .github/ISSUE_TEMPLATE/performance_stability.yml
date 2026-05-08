@@ -1,0 +1,59 @@
+name: Performance or stability
+description: Report slow execution, memory pressure, hangs, crashes, or unstable output.
+title: "[Performance]: "
+labels:
+  - "type: performance"
+  - "needs: triage"
+  - "priority: normal"
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Describe the performance or stability concern.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - "scope: rendering"
+        - "scope: batch-processing"
+        - "scope: filesystem"
+        - "scope: logging"
+        - "scope: ci"
+        - "scope: dependencies"
+        - "scope: tests"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command or workload
+      description: Include the exact command, batch size, emoji set, or CI job.
+      render: powershell
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Metrics
+      description: Include duration, memory usage, file count, CPU behavior, or repeated-run observations.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Python, Pillow, hardware, terminal, and whether psutil was installed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected stability or performance
+      description: Describe the acceptable behavior.
+    validations:
+      required: true

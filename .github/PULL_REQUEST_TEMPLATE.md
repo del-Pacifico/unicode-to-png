@@ -1,39 +1,56 @@
-# 🚀 Pull Request Template – Unicode to PNG
+# Pull Request Template - Unicode to PNG
 
----
+## Summary
 
-Thank you for contributing! Please complete the checklist below to ensure your changes are clear and reviewable.
+Describe the change in one or two clear paragraphs.
 
----
+## Scope
 
-## 📋 Description
+- **Type:** `type: bug` / `type: feature` / `type: documentation` / `type: chore` / `type: performance` / `type: release` / other:
+- **Scope:** `scope: cli` / `scope: rendering` / `scope: unicode` / `scope: output-files` / `scope: tests` / `scope: documentation` / `scope: repo-maintenance` / other:
+- **Behavior:** `behavior: non-breaking` / `behavior: opt-in` / breaking change:
+- **Priority:** `priority: high` / `priority: normal` / `priority: low`
 
-_Provide a concise summary of the changes introduced in this PR._
+## Related Issues
 
-## 🔧 Type of Change
+Closes #
+Relates to #
 
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Code refactor
-- [ ] Documentation update
-- [ ] Other (please describe):
+## Changes
 
-## 🧪 Related Issues
+-
 
-### Reference any issues this PR addresses (e.g. Closes #42)
+## Validation
 
-## 📸 Screenshots (if applicable)
+List exact commands and manual checks performed.
 
-_Add screenshots or screencasts to demonstrate UI/UX changes._
+```powershell
+python -m compileall unicode_to_png.py unicode_to_png tests
+python -m pytest
+python .\unicode_to_png.py --help
+```
 
-## ✅ Checklist
+## Risk And Impact
 
-- [ ] The code follows the project’s style guide
-- [ ] I’ve tested this functionality locally in a supported browser
-- [ ] I’ve reviewed and updated documentation where applicable
-- [ ] I’ve added or adjusted relevant logging/debug output
-- [ ] I’ve confirmed that no sensitive information is exposed in this PR
+- **Performance:**
+- **Stability:**
+- **Security:**
+- **Compatibility:**
+- **Rollback:**
 
----
+## Documentation
 
-> For more details on the architecture or feature behavior, please refer to the project Wiki.
+- [ ] `README.md` updated or confirmed unchanged.
+- [ ] `CHANGELOG.md` updated or confirmed unchanged.
+- [ ] Usage examples updated or confirmed unchanged.
+- [ ] GitHub templates, labels, or workflow docs updated when repository governance changed.
+
+## Checklist
+
+- [ ] Code follows the project style and supported Python version policy.
+- [ ] User-facing CLI messages, code comments, and console logs are written in professional English.
+- [ ] Errors are handled with clear user output and detailed operational logs when applicable.
+- [ ] Edge cases preserve flow continuity where possible and emit warnings when applicable.
+- [ ] No sensitive information, generated runtime artifacts, or local analysis reports are included.
+- [ ] Tests or documented manual validation cover the changed behavior.
+- [ ] Labels match `.github/LABELS.md` when applicable.
