@@ -46,7 +46,6 @@ No unreleased changes are currently documented.
 - GitHub issue templates were aligned with the current dependency and logging standards.
 - Pure helper logic was extracted into the internal `unicode_to_png/` package while preserving `python unicode_to_png.py` CLI compatibility.
 - Pull request and issue template guidance now aligns with the repository label taxonomy and CLI validation workflow.
-- Release planning note: promote the accumulated short-term and medium-term changes to version `1.20.0` in the next release branch.
 
 ---
 
