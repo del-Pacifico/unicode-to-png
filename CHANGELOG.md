@@ -7,6 +7,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+No unreleased changes are currently documented.
+
+---
+
+## [1.20.0] - 2026-05-08
+
 ### Added
 
 - Added root `VERSION` file as the canonical project version source.
