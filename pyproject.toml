@@ -7,7 +7,7 @@ name = "unicode-to-png"
 version = "1.20.0"
 description = "CLI tool that renders Unicode emoji into browser-ready PNG icon sets."
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.10"
 license = { text = "MPL-2.0" }
 authors = [
     { name = "Sergio Palma Hidalgo" }
@@ -25,7 +25,7 @@ classifiers = [
     "Topic :: Utilities",
 ]
 dependencies = [
-    "Pillow>=9.0",
+    "Pillow>=12.2.0",
 ]
 
 [project.optional-dependencies]

@@ -7,7 +7,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-No unreleased changes are currently documented.
+### Changed
+
+- Raised the minimum supported Python version to `3.10`.
+- Raised the minimum supported Pillow version to `12.2.0`.
 
 ---
 
