@@ -11,6 +11,30 @@ Describe the change in one or two clear paragraphs.
 - **Behavior:** `behavior: non-breaking` / `behavior: opt-in` / breaking change:
 - **Priority:** `priority: high` / `priority: normal` / `priority: low`
 
+## Labels
+
+Apply the appropriate repository labels before requesting review.
+
+This repository uses a scoped label taxonomy documented in `.github/LABELS.md`. Pull requests without accurate labels may be rejected or returned for triage before review.
+
+Minimum expected labels:
+
+- One `type:` label.
+- At least one `scope:` label.
+- One `priority:` label.
+- One `behavior:` label when compatibility or default behavior is relevant.
+- One `status:` label that reflects the current review state.
+
+Examples:
+
+```text
+type: chore
+scope: dependencies
+priority: normal
+behavior: non-breaking
+status: ready-for-review
+```
+
 ## Branch Flow
 
 This repository follows a staged promotion flow:
@@ -69,6 +93,6 @@ python .\unicode_to_png.py --help
 - [ ] Edge cases preserve flow continuity where possible and emit warnings when applicable.
 - [ ] No sensitive information, generated runtime artifacts, or local analysis reports are included.
 - [ ] Tests or documented manual validation cover the changed behavior.
-- [ ] Labels match `.github/LABELS.md` when applicable.
+- [ ] Required labels were applied and match `.github/LABELS.md`.
 - [ ] This PR targets the correct base branch according to the branch flow.
 - [ ] If this PR targets `main`, it is a release promotion or approved hotfix.
