@@ -1,4 +1,4 @@
-# Unicode to PNG Usage Guide
+# 🧙🏻‍♂️ Unicode to PNG Usage Guide
 
 This document describes how to run the Unicode to PNG CLI with explicit arguments.
 The tool does not read missing values from keyboard prompts.

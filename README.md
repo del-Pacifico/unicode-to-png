@@ -1,4 +1,4 @@
-# 🖼️ unicode_to_png
+# 🧙🏻‍♂️ Unicode to PNG
 
 ![Latest Release](https://img.shields.io/github/v/release/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
