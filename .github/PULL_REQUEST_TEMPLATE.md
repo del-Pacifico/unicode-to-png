@@ -11,6 +11,22 @@ Describe the change in one or two clear paragraphs.
 - **Behavior:** `behavior: non-breaking` / `behavior: opt-in` / breaking change:
 - **Priority:** `priority: high` / `priority: normal` / `priority: low`
 
+## Branch Flow
+
+This repository follows a staged promotion flow:
+
+```text
+feature/chore branch -> dev -> main -> tag/release
+```
+
+Rules:
+
+- Open feature, chore, fix, docs, test, and refactor PRs against `dev`.
+- Promote `dev` to `main` only through a dedicated release promotion PR.
+- Create tags and GitHub Releases only after the release promotion PR has been merged into `main`.
+- Do not open work branches directly against `main` unless the PR is an approved hotfix.
+- Hotfix PRs must stay minimal, use explicit labels, and include rollback notes.
+
 ## Related Issues
 
 Closes #
@@ -54,3 +70,5 @@ python .\unicode_to_png.py --help
 - [ ] No sensitive information, generated runtime artifacts, or local analysis reports are included.
 - [ ] Tests or documented manual validation cover the changed behavior.
 - [ ] Labels match `.github/LABELS.md` when applicable.
+- [ ] This PR targets the correct base branch according to the branch flow.
+- [ ] If this PR targets `main`, it is a release promotion or approved hotfix.
