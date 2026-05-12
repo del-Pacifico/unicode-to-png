@@ -1,10 +1,10 @@
-# 🖼️ unicode_to_png
+# 🧙🏻‍♂️ Unicode to PNG
 
 ![Latest Release](https://img.shields.io/github/v/release/del-Pacifico/unicode-to-png?style=flat-square&logo=github)
 ![License](https://img.shields.io/badge/license-MPL%202.0-blue?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-orange?style=flat-square)
-![Python](https://img.shields.io/badge/python-3.6%2B-yellow?style=flat-square)
-![Pillow](https://img.shields.io/badge/pillow-9.0%2B-brightgreen?style=flat-square)
+![Python](https://img.shields.io/badge/python-3.10%2B-yellow?style=flat-square)
+![Pillow](https://img.shields.io/badge/pillow-12.2%2B-brightgreen?style=flat-square)
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
 ![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
 
@@ -95,9 +95,9 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   Leverages `Segoe UI Emoji` for rich colored rendering on Windows 10/11. Falls back gracefully if missing.
 
 - ✅ **Minimal Requirements**  
-  - Python ≥ 3.6  
-  - Pillow ≥ 9.0  
-  - psutil optional, only for `--memlimit`  
+  - Python ≥ 3.10<br>
+  - Pillow ≥ 12.2.0<br>
+  - psutil optional, only for `--memlimit`<br>
   - No external API or web access needed
 
 ---
@@ -478,8 +478,8 @@ project_root/
 
 ### 🛡️ Validations & Error Controls
 
-- **Python version**: requires ≥ 3.6.
-- **Pillow version**: requires ≥ 9.0.
+- **Python version**: requires ≥ 3.10.
+- **Pillow version**: requires ≥ 12.2.0.
 - **OS check**: warns if not running on Windows.
 - **Emoji input**: must be printable and valid.
 - **Folder/alias names**: sanitized to allow only `[a-zA-Z0-9_]`.

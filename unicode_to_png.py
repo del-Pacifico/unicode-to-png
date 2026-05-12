@@ -46,8 +46,8 @@ from unicode_to_png import (
 )
 
 # Enforce the minimum supported Python version before running the CLI.
-if sys.version_info < (3, 6):
-    sys.exit("[utp] - ERROR - Python 3.6 or higher is required.")
+if sys.version_info < (3, 10):
+    sys.exit("[utp] - ERROR - Python 3.10 or higher is required.")
 
 Image = None
 ImageDraw = None
@@ -78,8 +78,8 @@ def ensure_runtime_dependencies():
         return False
 
     pillow_version = tuple(map(int, PilModule.__version__.split('.')[:2]))
-    if pillow_version < (9, 0):
-        safe_print(console_message("ERROR", f"Pillow 9.0 or higher is required. Current version: {PilModule.__version__}"))
+    if pillow_version < (12, 2):
+        safe_print(console_message("ERROR", f"Pillow 12.2.0 or higher is required. Current version: {PilModule.__version__}"))
         return False
 
     Image = PilImage

@@ -1,4 +1,4 @@
-# Contributing to Unicode to png
+# 🧙🏻‍♂️ Contributing to Unicode to PNG
 
 First off, thank you for taking the time to contribute! 🎉  
 We welcome contributions that improve functionality, fix bugs, update documentation, or enhance performance.

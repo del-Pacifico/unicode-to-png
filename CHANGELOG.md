@@ -1,4 +1,4 @@
-# 📦 Changelog – Unicode to png
+# 🧙🏻‍♂️ Changelog - Unicode to PNG
 
 All notable changes to this project are documented in this file.  
 This project follows [Semantic Versioning](https://semver.org/).
@@ -8,6 +8,15 @@ This project follows [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 No unreleased changes are currently documented.
+
+---
+
+## [1.21.0] - 2026-05-11
+
+### Changed
+
+- Raised the minimum supported Python version to `3.10`.
+- Raised the minimum supported Pillow version to `12.2.0`.
 
 ---
 
