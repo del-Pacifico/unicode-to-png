@@ -44,14 +44,13 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 
 ## 🆕 What’s New
 
-- CLI execution is fully parameter-driven; the script no longer reads missing values from keyboard prompts.
-- `--help` now includes usage rules, examples, output structure, and operational notes.
-- `--examples` provides detailed command examples without rendering or checking runtime dependencies.
-- `docs/USAGE.md` documents required arguments, batch mode, output naming, margin controls, automation, and common errors.
-- Output filenames can keep the default `emoji_` prefix, use a custom prefix, or derive the prefix from the output folder.
-- Runtime dependency validation, filesystem handling, and log persistence now fail with clearer messages.
-- Unit, CLI, and PNG integration tests now run locally and through Windows CI.
-- Project metadata, development dependencies, and repository links are aligned with the current GitHub repository.
+- Batch input now applies the same emoji validation policy used by single-emoji runs.
+- Invalid non-emoji batch entries are skipped with clear warnings while valid entries continue processing.
+- Edge-check rendering now uses one centralized crop, resize, and border-contact detection path.
+- CLI rendering defaults are centralized as module-level constants for easier maintenance.
+- Runtime logging behavior is documented more explicitly, including how `--quiet` interacts with log persistence.
+- Regression tests now cover invalid batch entries and edge-check border detection.
+- Project version metadata has been bumped to `1.22.0`.
 
 ---
 

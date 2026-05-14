@@ -7,6 +7,12 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+No unreleased changes are currently documented.
+
+---
+
+## [1.22.0] - 2026-05-14
+
 ### Changed
 
 - Aligned batch input validation with single emoji validation by reusing the existing emoji validation helper for `--batch` entries.
