@@ -10,6 +10,7 @@
 """Batch input parsing helpers for Unicode to PNG."""
 
 from .path_utils import sanitize_folder_name
+from .unicode_utils import is_emoji
 
 
 def parse_batch(batch_string):
@@ -22,6 +23,9 @@ def parse_batch(batch_string):
         emoji = parts[0].strip()
         if not emoji or not emoji.isprintable():
             warnings.append(f"Skipped batch entry {entry_number} because the emoji value is empty or not printable.")
+            continue
+        if not is_emoji(emoji):
+            warnings.append(f"Skipped batch entry {entry_number} because '{emoji}' is not a valid emoji.")
             continue
 
         # Get alias if present and sanitize it.

@@ -105,6 +105,12 @@ python unicode_to_png.py --batch "📦:package,🚀:rocket" --folder release_ass
 
 Runtime log entries are still persisted when warnings, errors, overwrites, or operational events are collected.
 
+## Runtime Logs
+
+Runtime logs are written to `log/YYYYMMDD_<folder>.log` when the CLI collects log entries during a generation run.
+
+Log entries may include normal operational events, warnings, overwrites, edge-check findings, memory warnings, and errors. `--quiet` suppresses normal console log output, but it does not disable log persistence. Direct validation errors may still be printed so automated callers receive a clear failure reason.
+
 ## Margin Controls
 
 Use `--margin` when a fixed margin ratio is required:
