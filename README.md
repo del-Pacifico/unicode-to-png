@@ -851,7 +851,10 @@ We’re happy to support contributors at all experience levels.
 
 ## 🙏 Acknowledgements
 
-Thank you for using **Unicode to PNG**.  
+Thank you for using **Unicode to PNG** and supporting a focused, privacy-friendly tool for turning Unicode emoji into polished browser-ready icons.
+
+Built for developers, designers, and automation workflows that need predictable output without external services, tracking, or unnecessary complexity.
+
 Made with ❤️ by **Del-Pacifico**.
 
 ---
