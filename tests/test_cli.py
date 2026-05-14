@@ -10,6 +10,7 @@
 import shutil
 import subprocess
 import sys
+import importlib.util
 from pathlib import Path
 
 from PIL import Image
@@ -20,6 +21,13 @@ SCRIPT_PATH = PROJECT_ROOT / "unicode_to_png.py"
 EMOJIS_ROOT = PROJECT_ROOT / "emojis"
 LOG_ROOT = PROJECT_ROOT / "log"
 ICON_SIZES = (16, 19, 32, 38, 48, 128)
+
+
+def load_cli_module():
+    spec = importlib.util.spec_from_file_location("unicode_to_png_cli", SCRIPT_PATH)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def run_cli(*args):
@@ -55,6 +63,28 @@ def assert_valid_icon_set(output_folder, filename_prefix="emoji"):
             assert icon.size == (size, size)
             assert icon.mode == "RGBA"
             assert icon.getchannel("A").getbbox() is not None
+
+
+def test_check_visual_edges_reports_right_or_bottom_contact():
+    cli_module = load_cli_module()
+    image = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
+    image.putpixel((3, 1), (255, 255, 255, 255))
+
+    log_entries = []
+
+    assert cli_module.check_visual_edges(image, 4, log_entries, quiet=True) is True
+    assert "Emoji touches right edge(s) at 4x4." in log_entries[0]
+
+
+def test_check_visual_edges_returns_false_when_output_has_padding():
+    cli_module = load_cli_module()
+    image = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
+    image.putpixel((1, 1), (255, 255, 255, 255))
+
+    log_entries = []
+
+    assert cli_module.check_visual_edges(image, 4, log_entries, quiet=True) is False
+    assert log_entries == []
 
 
 def test_cli_help_returns_usage_without_runtime_dependency_checks():

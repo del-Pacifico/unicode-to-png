@@ -249,8 +249,27 @@ def check_visual_edges(image, size_label, log_entries, quiet):
             if touches_bottom:
                 edge_info.append("bottom")
             log(f"Emoji touches {', '.join(edge_info)} edge(s) at {size_label}x{size_label}.", log_entries, quiet=quiet, level="WARNING")
+            return True
     except Exception as edge_check_error:
         log(f"Visual edge test failed for {size_label}x{size_label}.", log_entries, quiet=quiet, level="WARNING", detail=str(edge_check_error))
+    return False
+
+
+def render_with_margin_and_test(img, temp_size, bbox, size, margin_px, enable_check, log_entries, quiet, x, y):
+    """Crop, resize, and optionally test rendered output for right/bottom edge contact."""
+    crop_left = max(x - margin_px, 0)
+    crop_top = max(y - margin_px, 0)
+    crop_right = min(x + (bbox[2] - bbox[0]) + margin_px, temp_size)
+    crop_bottom = min(y + (bbox[3] - bbox[1]) + margin_px, temp_size)
+
+    cropped = img.crop((crop_left, crop_top, crop_right, crop_bottom))
+    resized = cropped.resize((size, size), Image.LANCZOS)
+
+    touches_edge = False
+    if enable_check:
+        touches_edge = check_visual_edges(resized, size, log_entries, quiet)
+
+    return resized, touches_edge
 
 def iter_image_pixels(image):
     """Return an iterator over image pixels while supporting newer Pillow APIs."""
@@ -470,34 +489,6 @@ def main():
             except Exception as margin_error:
                 margin_pixels = int(temp_size * margin_ratio)
                 log(f"Margin adaptation failed. Base margin {margin_pixels}px will be used.", log_entries, quiet=quiet_mode, level="WARNING", detail=str(margin_error))
-
-            # Crop and resize with optional retry when an edge is touched.
-            def render_with_margin_and_test(img, temp_size, bbox, size, margin_px, enable_check, log_entries, quiet, x, y):
-                crop_left = max(x - margin_px, 0)
-                crop_top = max(y - margin_px, 0)
-                crop_right = min(x + (bbox[2] - bbox[0]) + margin_px, temp_size)
-                crop_bottom = min(y + (bbox[3] - bbox[1]) + margin_px, temp_size)
-
-                cropped = img.crop((crop_left, crop_top, crop_right, crop_bottom))
-                resized = cropped.resize((size, size), Image.LANCZOS)
-
-                # Check visual borders when edge checking is enabled.
-                if enable_check:
-                    try:
-                        pixels = resized.load()
-                        width, height = resized.size
-                        touches_right = any(pixels[width - 1, y][3] != 0 for y in range(height))
-                        touches_bottom = any(pixels[x, height - 1][3] != 0 for x in range(width))
-                        if touches_right or touches_bottom:
-                            edge_info = []
-                            if touches_right: edge_info.append("right")
-                            if touches_bottom: edge_info.append("bottom")
-                            log(f"Emoji touches {', '.join(edge_info)} edge(s) at {size}x{size}.", log_entries, quiet=quiet, level="WARNING")
-                            return resized, True
-                    except Exception as edge_error:
-                        log(f"Visual edge test failed at {size}x{size}.", log_entries, quiet=quiet, level="WARNING", detail=str(edge_error))
-
-                return resized, False
 
             try:
                 resized_img, needs_retry = render_with_margin_and_test(
