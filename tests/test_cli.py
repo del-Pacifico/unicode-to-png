@@ -20,14 +20,18 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = PROJECT_ROOT / "unicode_to_png.py"
 EMOJIS_ROOT = PROJECT_ROOT / "emojis"
 LOG_ROOT = PROJECT_ROOT / "log"
-ICON_SIZES = (16, 19, 32, 38, 48, 128)
+_CLI_MODULE = None
 
 
 def load_cli_module():
+    global _CLI_MODULE
+    if _CLI_MODULE is not None:
+        return _CLI_MODULE
     spec = importlib.util.spec_from_file_location("unicode_to_png_cli", SCRIPT_PATH)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module
+    _CLI_MODULE = module
+    return _CLI_MODULE
 
 
 def run_cli(*args):
@@ -53,7 +57,7 @@ def cleanup_codex_artifacts(*folder_names):
 
 
 def assert_valid_icon_set(output_folder, filename_prefix="emoji"):
-    for size in ICON_SIZES:
+    for size in load_cli_module().ICON_SIZES:
         icon_path = output_folder / f"{filename_prefix}_{size}x{size}.png"
         assert icon_path.exists()
         assert icon_path.stat().st_size > 0

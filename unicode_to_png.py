@@ -63,6 +63,11 @@ try:
 except ImportError:
     pass
 
+ICON_SIZES = (16, 19, 32, 38, 48, 128)
+SCALE_FACTOR = 4
+DEFAULT_MARGIN_RATIO = 0.25
+DEFAULT_MEMORY_LIMIT_MB = 500
+
 def ensure_runtime_dependencies():
     """Ensure runtime dependencies are installed without modifying the environment."""
     global Image, ImageDraw, ImageFont, UnidentifiedImageError, PIL
@@ -298,8 +303,6 @@ def main():
         safe_print(console_message("INFO", f"Unicode to PNG Generator v{read_version()} started."))
         safe_print(console_message("INFO", "Use --help to list available options and examples."))
     
-    # Use a default margin ratio to reduce clipping risk.
-    DEFAULT_MARGIN_RATIO = 0.25
     margin_ratio = args.margin if args.margin and args.margin > 0 else DEFAULT_MARGIN_RATIO
 
     if args.margin is not None and args.margin <= 0:
@@ -310,8 +313,6 @@ def main():
         safe_print(console_message("INFO", f"Using custom margin ratio: {margin_ratio}."))
     
     
-    # Set the memory limit used when optional memory monitoring is available.
-    DEFAULT_MEMORY_LIMIT_MB = 500
     memory_limit_mb = args.memlimit if args.memlimit and args.memlimit > 0 else DEFAULT_MEMORY_LIMIT_MB
     if args.memlimit is not None and args.memlimit <= 0:
         startup_warnings.append(f"Invalid memory limit '{args.memlimit}' was provided. Default memory limit {DEFAULT_MEMORY_LIMIT_MB} MB will be used.")
@@ -425,9 +426,6 @@ def main():
         log(f"Starting PNG generation for emoji {index} into '{output_path}'.", log_entries, quiet=quiet_mode)
         log(f"Output filename prefix applied: {active_filename_prefix}.", log_entries, quiet=quiet_mode, level="DEBUG")
         log(f"Margin ratio applied: {margin_ratio}.", log_entries, quiet=quiet_mode, level="DEBUG")
-
-        ICON_SIZES = [16, 19, 32, 38, 48, 128]
-        SCALE_FACTOR = 4
 
         for size in ICON_SIZES:
             temp_size = size * SCALE_FACTOR
