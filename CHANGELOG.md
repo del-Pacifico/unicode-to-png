@@ -7,7 +7,27 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-No unreleased changes are currently documented.
+### Changed
+
+- Aligned batch input validation with single emoji validation by reusing the existing emoji validation helper for `--batch` entries.
+- Centralized edge-check rendering flow so crop, resize, and border-contact detection use one reusable path.
+- Promoted CLI rendering defaults to module-level constants, including icon sizes, scale factor, margin ratio, and memory limit.
+- Clarified runtime logging behavior in `README.md` and `docs/USAGE.md`, including how `--quiet` interacts with log persistence.
+
+### Fixed
+
+- Invalid non-emoji batch entries are now skipped with clear warnings while valid batch entries continue processing.
+- Batch runs with no valid entries now surface collected validation warnings before the existing fatal error.
+
+### Tests
+
+- Added regression coverage for invalid batch entries.
+- Added direct edge-check tests for border contact and padded output.
+
+### Notes
+
+- Related issue: #20
+- Related discussion: #19
 
 ---
 
