@@ -330,6 +330,8 @@ def main():
         emoji_pairs = [(emoji_input, "single")]
 
     if not emoji_pairs:
+        for warning in startup_warnings:
+            safe_print(console_message("WARNING", warning))
         safe_print(console_message("ERROR", "No valid emoji entries were provided."))
         sys.exit(1)
 

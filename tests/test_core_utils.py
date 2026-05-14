@@ -61,6 +61,13 @@ def test_parse_batch_skips_empty_entries_and_continues():
     ]
 
 
+def test_parse_batch_skips_invalid_non_emoji_entries_and_continues():
+    pairs, warnings = parse_batch("abc:invalid,🎯:target")
+
+    assert pairs == [("🎯", "target")]
+    assert warnings == ["Skipped batch entry 1 because 'abc' is not a valid emoji."]
+
+
 def test_parse_batch_uses_fallback_when_alias_sanitizes_to_empty():
     pairs, warnings = parse_batch("🎯:!!!")
 

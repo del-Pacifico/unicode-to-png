@@ -128,6 +128,16 @@ def test_cli_batch_without_valid_entries_exits_before_rendering():
     assert not (PROJECT_ROOT / "emojis" / "cli_empty_batch").exists()
 
 
+def test_cli_batch_with_only_invalid_non_emoji_entries_exits_before_rendering():
+    result = run_cli("--batch", "abc:invalid", "--folder", "cli_invalid_batch", "--quiet")
+
+    assert result.returncode == 1
+    assert "[utp] - WARNING - Skipped batch entry 1 because 'abc' is not a valid emoji." in result.stdout
+    assert "[utp] - ERROR - No valid emoji entries were provided." in result.stdout
+    assert result.stderr == ""
+    assert not (PROJECT_ROOT / "emojis" / "cli_invalid_batch").exists()
+
+
 def test_cli_rejects_conflicting_filename_prefix_options():
     result = run_cli(
         "--emoji",
