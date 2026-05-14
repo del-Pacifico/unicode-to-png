@@ -27,6 +27,7 @@
 - 💖 [Support the Project](#-support-the-project)
 - 🤝 [Contributions](#-contributions)
 - 📚 [Governance & Ethics](#-governance--ethics)
+- 🙏 [Acknowledgements](#-acknowledgements)
 
 ---
 
@@ -845,6 +846,13 @@ We’re happy to support contributors at all experience levels.
 
 - 🔐 [Security Policy](./SECURITY.md) — How we manage vulnerabilities and review AI-assisted code.
 - 🙌 [Contribution Guidelines](./CONTRIBUTING.md) — How to collaborate, submit PRs, and use AI responsibly.
+
+---
+
+## 🙏 Acknowledgements
+
+Thank you for using **Unicode to PNG**.  
+Made with ❤️ by **Del-Pacifico**.
 
 ---
 
