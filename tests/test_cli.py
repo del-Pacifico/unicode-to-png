@@ -10,6 +10,7 @@
 import shutil
 import subprocess
 import sys
+import importlib.util
 from pathlib import Path
 
 from PIL import Image
@@ -19,7 +20,18 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = PROJECT_ROOT / "unicode_to_png.py"
 EMOJIS_ROOT = PROJECT_ROOT / "emojis"
 LOG_ROOT = PROJECT_ROOT / "log"
-ICON_SIZES = (16, 19, 32, 38, 48, 128)
+_CLI_MODULE = None
+
+
+def load_cli_module():
+    global _CLI_MODULE
+    if _CLI_MODULE is not None:
+        return _CLI_MODULE
+    spec = importlib.util.spec_from_file_location("unicode_to_png_cli", SCRIPT_PATH)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    _CLI_MODULE = module
+    return _CLI_MODULE
 
 
 def run_cli(*args):
@@ -45,7 +57,7 @@ def cleanup_codex_artifacts(*folder_names):
 
 
 def assert_valid_icon_set(output_folder, filename_prefix="emoji"):
-    for size in ICON_SIZES:
+    for size in load_cli_module().ICON_SIZES:
         icon_path = output_folder / f"{filename_prefix}_{size}x{size}.png"
         assert icon_path.exists()
         assert icon_path.stat().st_size > 0
@@ -55,6 +67,28 @@ def assert_valid_icon_set(output_folder, filename_prefix="emoji"):
             assert icon.size == (size, size)
             assert icon.mode == "RGBA"
             assert icon.getchannel("A").getbbox() is not None
+
+
+def test_check_visual_edges_reports_right_or_bottom_contact():
+    cli_module = load_cli_module()
+    image = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
+    image.putpixel((3, 1), (255, 255, 255, 255))
+
+    log_entries = []
+
+    assert cli_module.check_visual_edges(image, 4, log_entries, quiet=True) is True
+    assert "Emoji touches right edge(s) at 4x4." in log_entries[0]
+
+
+def test_check_visual_edges_returns_false_when_output_has_padding():
+    cli_module = load_cli_module()
+    image = Image.new("RGBA", (4, 4), (0, 0, 0, 0))
+    image.putpixel((1, 1), (255, 255, 255, 255))
+
+    log_entries = []
+
+    assert cli_module.check_visual_edges(image, 4, log_entries, quiet=True) is False
+    assert log_entries == []
 
 
 def test_cli_help_returns_usage_without_runtime_dependency_checks():
@@ -126,6 +160,16 @@ def test_cli_batch_without_valid_entries_exits_before_rendering():
     assert "[utp] - ERROR - No valid emoji entries were provided." in result.stdout
     assert result.stderr == ""
     assert not (PROJECT_ROOT / "emojis" / "cli_empty_batch").exists()
+
+
+def test_cli_batch_with_only_invalid_non_emoji_entries_exits_before_rendering():
+    result = run_cli("--batch", "abc:invalid", "--folder", "cli_invalid_batch", "--quiet")
+
+    assert result.returncode == 1
+    assert "[utp] - WARNING - Skipped batch entry 1 because 'abc' is not a valid emoji." in result.stdout
+    assert "[utp] - ERROR - No valid emoji entries were provided." in result.stdout
+    assert result.stderr == ""
+    assert not (PROJECT_ROOT / "emojis" / "cli_invalid_batch").exists()
 
 
 def test_cli_rejects_conflicting_filename_prefix_options():

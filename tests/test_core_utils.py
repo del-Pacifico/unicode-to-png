@@ -7,6 +7,8 @@
 # Copyright (c) 2025 Sergio Palma Hidalgo
 # All rights reserved.
 #
+from pathlib import Path
+
 from unicode_to_png.logging_utils import console_message
 from unicode_to_png.logging_utils import write_log_if_needed
 from unicode_to_png.path_utils import prepare_log_path, sanitize_folder_name
@@ -16,6 +18,7 @@ from unicode_to_png import parse_batch
 
 
 SAMPLE_LOG_ENTRY = "[TEST] Example event."
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_read_version_reads_root_version_file(tmp_path):
@@ -27,6 +30,13 @@ def test_read_version_reads_root_version_file(tmp_path):
 
 def test_read_version_returns_fallback_when_version_file_is_missing(tmp_path):
     assert read_version(root_dir=tmp_path) == "0.0.0"
+
+
+def test_project_metadata_version_matches_version_file():
+    version = (PROJECT_ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    pyproject = (PROJECT_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+
+    assert f'version = "{version}"' in pyproject
 
 
 def test_sanitize_folder_name_keeps_alphanumeric_and_underscores():
@@ -59,6 +69,13 @@ def test_parse_batch_skips_empty_entries_and_continues():
         "Skipped batch entry 1 because the emoji value is empty or not printable.",
         "Batch entry 2 has no alias. Fallback alias 'emoji1' was used.",
     ]
+
+
+def test_parse_batch_skips_invalid_non_emoji_entries_and_continues():
+    pairs, warnings = parse_batch("abc:invalid,🎯:target")
+
+    assert pairs == [("🎯", "target")]
+    assert warnings == ["Skipped batch entry 1 because 'abc' is not a valid emoji."]
 
 
 def test_parse_batch_uses_fallback_when_alias_sanitizes_to_empty():
