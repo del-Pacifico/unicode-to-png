@@ -27,6 +27,7 @@
 - 💖 [Support the Project](#-support-the-project)
 - 🤝 [Contributions](#-contributions)
 - 📚 [Governance & Ethics](#-governance--ethics)
+- 🙏 [Acknowledgements](#-acknowledgements)
 
 ---
 
@@ -44,14 +45,13 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 
 ## 🆕 What’s New
 
-- CLI execution is fully parameter-driven; the script no longer reads missing values from keyboard prompts.
-- `--help` now includes usage rules, examples, output structure, and operational notes.
-- `--examples` provides detailed command examples without rendering or checking runtime dependencies.
-- `docs/USAGE.md` documents required arguments, batch mode, output naming, margin controls, automation, and common errors.
-- Output filenames can keep the default `emoji_` prefix, use a custom prefix, or derive the prefix from the output folder.
-- Runtime dependency validation, filesystem handling, and log persistence now fail with clearer messages.
-- Unit, CLI, and PNG integration tests now run locally and through Windows CI.
-- Project metadata, development dependencies, and repository links are aligned with the current GitHub repository.
+- Batch input now applies the same emoji validation policy used by single-emoji runs.
+- Invalid non-emoji batch entries are skipped with clear warnings while valid entries continue processing.
+- Edge-check rendering now uses one centralized crop, resize, and border-contact detection path.
+- CLI rendering defaults are centralized as module-level constants for easier maintenance.
+- Runtime logging behavior is documented more explicitly, including how `--quiet` interacts with log persistence.
+- Regression tests now cover invalid batch entries and edge-check border detection.
+- Project version metadata has been bumped to `1.22.0`.
 
 ---
 
@@ -77,7 +77,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
 
 - 🗂️ **Structured Output**  
   Icons are saved inside: `emojis/<folder_base>_<alias>/`  
-  Logs (if any) stored in: `log/YYYYMMDD_<folder>.log`
+  Runtime logs are stored in: `log/YYYYMMDD_<folder>.log` when log entries are collected.
 
 - 🏷️ **Configurable Filename Prefix**
   Output PNG files use the default `emoji_` prefix unless `--filename-prefix` or `--filename-prefix-from-folder` is provided.
@@ -89,7 +89,7 @@ With robust emoji parsing, strict validation, and automatic rendering margin adj
   All folder and alias inputs are automatically cleaned to avoid invalid filesystem characters.
 
 - 🔍 **Safe Logging System**  
-  Warnings, overwrites, and unexpected events are logged with timestamps and severity levels. Console logs use `[utp] - LEVEL - message`; file logs use `[YYYY-MM-DD HH:MM:SS] [LEVEL] message`.
+  Operational events, warnings, overwrites, and unexpected events are logged with timestamps and severity levels. Console logs use `[utp] - LEVEL - message`; file logs use `[YYYY-MM-DD HH:MM:SS] [LEVEL] message`.
 
 - 🖥️ **Optimized for Windows**  
   Leverages `Segoe UI Emoji` for rich colored rendering on Windows 10/11. Falls back gracefully if missing.
@@ -131,7 +131,7 @@ The Unicode to PNG engine follows a precise and scalable rendering pipeline to c
 
 6. 📁 **Output Organization**  
    - Icons are saved in `emojis/<base>_<alias>/`  
-   - If any warnings, errors, or overwrites occur, they are logged into `log/YYYYMMDD_<base>_<alias>.log`
+   - Runtime events, warnings, errors, and overwrites are logged into `log/YYYYMMDD_<base>_<alias>.log` when entries are collected.
 
 7. 📡 **Silent Automation Support**  
    - Use `--quiet` to suppress console output in automation pipelines while preserving log creation.
@@ -230,14 +230,15 @@ python unicode_to_png.py --batch "🔥:fire,🎨:palette,🧪:lab" --folder scie
 
 #### 🔹 Quiet Mode for Automation and CI/CD
 
-Suppresses console output while still generating logs when needed. Ideal for integrating the tool into build pipelines or scripts.
+Suppresses normal console log output while preserving runtime log persistence. Ideal for integrating the tool into build pipelines or scripts.
 
 ```bash
 python unicode_to_png.py --batch "📦:package,🚀:rocket" --folder release_assets --quiet
 ```
 
-- No console output.
-- Log files (if issues occur): `log/YYYYMMDD_release_assets_*.log`
+- Normal console log output is suppressed.
+- Direct validation errors may still be printed so automated callers receive a clear failure reason.
+- Log files are written when runtime entries are collected: `log/YYYYMMDD_release_assets_*.log`
 
 ---
 
@@ -277,7 +278,7 @@ python unicode_to_png.py --batch "👩‍💻:developer,🧑‍🚒:firefighter"
 
 - Fully silent mode.
 - Auto-corrects rendering margins.
-- Generates logs only if necessary.
+- Persists runtime logs when log entries are collected.
 
 ---
 
@@ -290,7 +291,7 @@ Generation commands require `--folder` and either `--emoji` or `--batch`. Inform
 | `--emoji`         | string   | Yes*     | A single emoji to convert (e.g., `"🧠"`).                                  |
 | `--batch`         | string   | Yes*     | Comma-separated list of emoji:alias pairs (e.g., `"🔥:fire,🎮:game"`).     |
 | `--folder`        | string   | Yes      | Base name for output folder(s). Sanitized to avoid invalid characters.     |
-| `--quiet`         | flag     | No       | Suppresses all console output. Logging still occurs if warnings/errors.    |
+| `--quiet`         | flag     | No       | Suppresses normal console log output. Runtime log persistence still applies. |
 | `--memlimit`      | integer  | No       | Aborts if process memory exceeds this MB value. Requires optional `psutil`. |
 | `--margin`        | float    | No       | Adds manual margin (e.g., `0.25` = 25%) around emoji.                      |
 | `--edgecheck`     | flag     | No       | Detects if rendered pixels touch the right or bottom edge.                 |
@@ -368,7 +369,7 @@ Integrate the script into GitHub Actions, scheduled tasks, or custom build syste
 python unicode_to_png.py --batch "🎯:focus,💡:idea" --folder assets --quiet
 ```
 
-All logs are written to the `log/` directory if needed, but console remains silent.
+Runtime logs are written to the `log/` directory when entries are collected, while normal console log output remains silent.
 
 ---
 
@@ -845,6 +846,16 @@ We’re happy to support contributors at all experience levels.
 
 - 🔐 [Security Policy](./SECURITY.md) — How we manage vulnerabilities and review AI-assisted code.
 - 🙌 [Contribution Guidelines](./CONTRIBUTING.md) — How to collaborate, submit PRs, and use AI responsibly.
+
+---
+
+## 🙏 Acknowledgements
+
+Thank you for using **Unicode to PNG** and supporting a focused, privacy-friendly tool for turning Unicode emoji into polished browser-ready icons.
+
+Built for developers, designers, and automation workflows that need predictable output without external services, tracking, or unnecessary complexity.
+
+Made with ❤️ by **Del-Pacifico**.
 
 ---
 
