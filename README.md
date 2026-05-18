@@ -808,6 +808,14 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
    git checkout -b feature/my-feature
    ```
 
+   Repository work must follow this promotion flow:
+
+   ```text
+   feature/chore branch -> dev -> main -> tag/release
+   ```
+
+   Open feature, chore, fix, docs, test, and refactor pull requests against `dev`. Changes are promoted to `main` only through a dedicated release promotion pull request, and tags/releases are created only after the promotion has landed in `main`.
+
 3. **Make Your Changes**  
    Ensure code follows Python best practices and includes proper docstrings and inline comments.
 
