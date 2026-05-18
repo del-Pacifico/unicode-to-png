@@ -8,6 +8,10 @@
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
 ![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
 
+<p align="center">
+  <img src="assets/Unicode-to-PNG-preview.png" alt="Unicode to PNG preview" width="900">
+</p>
+
 ---
 
 ## 📖 Table of Contents
