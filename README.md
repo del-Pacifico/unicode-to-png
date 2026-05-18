@@ -839,11 +839,11 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
 
 ### 🧪 Guidelines
 
-- Use English for all code, comments, and commits.
 - Write meaningful commit messages.
-- Prefer modular, testable code.
-- Avoid breaking changes unless previously discussed.
+- Keep pull requests focused and limited to the documented scope.
+- Avoid breaking changes unless they were previously discussed and explicitly approved.
 - Include examples in the README if introducing new features.
+- Update `CHANGELOG.md` for every pull request.
 
 ---
 
