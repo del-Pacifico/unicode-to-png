@@ -8,6 +8,10 @@
 ![Status](https://img.shields.io/badge/status-stable-green?style=flat-square)
 ![CLI Only](https://img.shields.io/badge/Interface-CLI%20only-yellow?style=flat-square&logo=terminal)
 
+<p align="center">
+  <img src="assets/Unicode-to-PNG-preview.png" alt="Unicode to PNG preview" width="900">
+</p>
+
 ---
 
 ## 📖 Table of Contents
@@ -804,8 +808,23 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
    git checkout -b feature/my-feature
    ```
 
+   Repository work must follow this promotion flow:
+
+   ```text
+   feature/chore branch -> dev -> main -> tag/release
+   ```
+
+   Open feature, chore, fix, docs, test, and refactor pull requests against `dev`. Changes are promoted to `main` only through a dedicated release promotion pull request, and tags/releases are created only after the promotion has landed in `main`.
+
 3. **Make Your Changes**  
-   Ensure code follows Python best practices and includes proper docstrings and inline comments.
+   Contributions must follow the project's development rules:
+
+   - Use language best practices for clear, maintainable Python.
+   - Keep changes modular, focused, and testable.
+   - Handle errors professionally with clear recovery paths.
+   - Account for edge cases, report failures through logs or user-facing messages as appropriate, and continue operating whenever safe. Unhandled catastrophic failures are not acceptable.
+   - Avoid bottlenecks in CPU, memory, filesystem, and batch-processing paths.
+   - Write code comments, logs, and user-facing messages in professional, approachable English.
 
 4. **Test Locally**  
    Before submitting, verify that your changes do not break existing functionality. Run:
@@ -820,11 +839,11 @@ We welcome contributions of all kinds — whether you're fixing bugs, adding new
 
 ### 🧪 Guidelines
 
-- Use English for all code, comments, and commits.
 - Write meaningful commit messages.
-- Prefer modular, testable code.
-- Avoid breaking changes unless previously discussed.
+- Keep pull requests focused and limited to the documented scope.
+- Avoid breaking changes unless they were previously discussed and explicitly approved.
 - Include examples in the README if introducing new features.
+- Update `CHANGELOG.md` for every pull request.
 
 ---
 
