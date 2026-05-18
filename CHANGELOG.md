@@ -12,6 +12,7 @@ This project follows [Semantic Versioning](https://semver.org/).
 - Added the repository preview image to the `README.md` header so the project page matches the GitHub Social Preview visual identity.
 - Documented the required repository promotion flow in `README.md`: `feature/chore branch -> dev -> main -> tag/release`.
 - Expanded the `README.md` contribution guidance with project development rules for modularity, error handling, edge-case continuity, performance, and professional English messaging.
+- Clarified that every pull request must update `CHANGELOG.md`.
 
 ---
 
